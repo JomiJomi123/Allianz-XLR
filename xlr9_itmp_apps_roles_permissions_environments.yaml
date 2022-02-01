@@ -1,0 +1,5824 @@
+---
+apiVersion: xl-release/v1
+kind: Environments
+spec:
+  stages:
+  - TEST
+  - DEMO
+  - PROD
+  - DEV
+  - PERF
+  - DEV20
+  - COREUPGRADE
+  - MyStage
+  - HOTFIX2
+  - HOTFIX
+  - UPGRADE
+  - INTAKE
+  - PrePROD
+  - TEMP
+  labels:
+  - name: ITMP Tools
+    color: '#65747c'
+  - name: OE-AGCS
+    color: '#991c71'
+  - name: OE-Italy
+    color: '#991c71'
+  - name: AWS-E1
+    color: '#00875a'
+  - name: OE-Australia
+    color: '#991c71'
+  - name: OE-Spain
+    color: '#991c71'
+  - name: ITMP Product
+    color: '#0079bc'
+  - name: OE
+    color: '#991c71'
+  - name: XLR Testing
+    color: '#ffab00'
+  environments:
+  - name: COREUPGRADE
+    stage: COREUPGRADE
+  - name: Intake
+    stage: INTAKE
+  - name: UPGRADE
+    stage: UPGRADE
+    labels:
+    - ITMP Product
+  - name: HOTFIX2
+    stage: HOTFIX2
+    labels:
+    - ITMP Product
+  - name: DEV
+    stage: DEV
+    labels:
+    - ITMP Product
+  - name: TEST
+    stage: TEST
+    labels:
+    - ITMP Product
+  - name: DEV20
+    stage: DEV20
+    labels:
+    - ITMP Product
+  - name: DEMO
+    stage: DEMO
+    labels:
+    - ITMP Product
+  - name: PERF
+    stage: PERF
+  - name: HOTFIX
+    stage: HOTFIX
+    labels:
+    - ITMP Product
+---
+apiVersion: xl-release/v1
+kind: Applications
+spec:
+- name: '[ABS] Host'
+- name: '[GDF] SME Config'
+- name: Policy Management BFF
+- name: Midcorp
+  environments:
+  - PERF
+  - DEV20
+  - DEV
+  - HOTFIX2
+  - UPGRADE
+  - COREUPGRADE
+  - HOTFIX
+  - DEMO
+  - TEST
+- name: '[ABS] RAP'
+- name: Dummy application
+- name: '[GDF] SME FE'
+- name: AOMS
+- name: '[GDF] FNOL Config'
+- name: '[GDF] FNOL BFF'
+- name: '[GDF] SME BFF'
+- name: '[GDF] MO FE'
+- name: Policy Search BFF
+- name: '[GDF] FNOL FE'
+- name: RadarLive
+- name: '[GDF] MO BFF'
+- name: '[ABS] DB'
+- name: AIMS
+- name: Filenet
+- name: Policy Management FE
+- name: Policy Search FE
+- name: '[ABS] CISL'
+- name: '[GDF] MO Config'
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: ABS POC
+- directory: archive
+- directory: BMPDI
+  children:
+  - directory: Nexus Builds
+  - directory: Release Process
+- directory: Customer Portal
+- directory: DBA
+  children:
+  - directory: Ajai
+- directory: Dummy
+  children:
+  - directory: Dummie
+- directory: Internal Development
+- directory: ITMP AAL
+- directory: ITMP-ASIA
+  children:
+  - directory: Release
+- directory: ITMP Global
+  children:
+  - directory: Deliver
+  - directory: Staging Dashboards (Migrated)
+    children:
+    - directory: OE Staging Dashboards (Migrated)
+  - directory: Config Dashboards (Migrated)
+    children:
+    - directory: OE Config Dashboards
+  - directory: Release
+  - directory: Development
+  - directory: Build
+  - directory: Deploy
+    children:
+    - directory: In Progress
+- directory: ITMP IberoLatAm
+  children:
+  - directory: Deploy
+  - directory: Release
+- directory: ITMP Italy
+  children:
+  - directory: Release
+- directory: ITMP Product
+  children:
+  - directory: Development
+    children:
+    - directory: Log Retrieval
+    - directory: Branching
+    - directory: Dummy
+  - directory: Build and Deploy
+  - directory: Deploy
+    children:
+    - directory: DevWorkplace
+    - directory: Backend
+    - directory: Batch
+    - directory: Daily Deploy
+    - directory: Promote
+    - directory: Frontend
+      children:
+      - directory: In Progress
+      - directory: Manual
+    - directory: Services
+  - directory: Ordering
+    children:
+    - directory: Initial
+    - directory: In Progress
+    - directory: Change
+  - directory: Test
+  - directory: Release
+    children:
+    - directory: Release Versions
+    - directory: JIra trigger
+    - directory: Code Quality
+  - directory: Staging Dashboards (Migrated)
+  - directory: INTAKE
+  - directory: Release Notes
+  - directory: System
+  - directory: Build
+  - directory: Config Dashboards (Migrated)
+    children:
+    - directory: OE Config Dashboards (Migrated)
+  - directory: Deliver
+    children:
+    - directory: Environment
+    - directory: Stage
+    - directory: Tools
+- directory: ITMP Project (generic)
+  children:
+  - directory: Customer Extensions
+- directory: ITMP-SCB
+  children:
+  - directory: Deploy
+  - directory: Release
+- directory: Midcorp
+- directory: QB Life
+- directory: Samples & Tutorials
+- directory: Testing
+  children:
+  - directory: Sprint Value Stream Mapping
+  - directory: TemplateReplacement
+---
+apiVersion: xl-release/v1
+kind: Roles
+spec:
+- name: Admin ITMP
+  principals:
+  - bucom_admin
+  - X7631
+  - a4939
+  - a4938
+  - A7693
+  - S2441
+  - TMU-ITMP-CRF
+  - A7677
+  - gjhfk9f
+  - raul_valverde
+  - josephine.j
+  - A6689
+  - duong
+  - A8722
+  - S5659
+- name: BMPDI
+  principals:
+  - a7570
+  - a8721
+  - X6047
+  - a5800
+  - A7663
+- name: Batch
+  principals:
+  - A7677
+  - S5659
+- name: CISL DEV
+  principals:
+  - K8JX7AC
+  - EXTERN.GUPTA_MAYANK
+  - K8QC9M8
+  - JYZSMYH
+  - I5CNAL5
+  - A8895
+  - puransingh.chandel
+  - VGHDHFB
+- name: DBA
+  principals:
+  - y1103
+  - A6462
+  - A7664
+  - y1079
+  - y1133
+  - s7645
+  - y1077
+  - S7645
+  - y1011
+  - y1078
+- name: GDF
+  principals:
+  - shay
+- name: GTF
+  principals:
+  - kalpit
+  - vaani
+  - rathin
+- name: ITMP Release Manager
+  principals:
+  - X7631
+  - g113309
+  - a4938
+  - QA9PLCA
+  - VLH25QP
+  - srini
+  - A7677
+  - gjhfk9f
+  - josephine.j
+  - y1011
+  - CPDB2TG
+- name: Operations
+  principals:
+  - a4938
+  - A8925
+  - a8937
+  - S2441
+  - TMU-ITMP-CRF
+  - A7677
+  - A6689
+  - A8722
+  - S5659
+- name: Q&B LIFE
+  principals:
+  - PEIXOTO-RITO
+  - Jost-Ulrich
+  - HEGOCZKI-GABOR
+  - GRINON-CHICO-SERGIO
+  - ROMERO-MORENO
+- name: Q&B Motorretail
+  principals:
+  - alberto.cortes
+  - jordi.tribo
+- name: Release Manager
+  principals:
+  - bucom_admin
+  - admin
+  - g113309
+  - QA9PLCA
+  - X6047
+  - VLH25QP
+  - gjhfk9f
+- name: Template Designer
+  principals:
+  - S2441
+  - S5659
+- name: View all
+  principals:
+  - A4469
+  - jesus.munoz
+  - e9zrxst
+- name: oe_editor
+  principals:
+  - S2441
+  - A7677
+  - S5659
+- name: testRole
+  principals:
+  - S2441
+  - x6860
+  - S5659
+---
+apiVersion: xl-release/v1
+kind: Permissions
+spec:
+- global:
+  - role: View all
+  - role: oe_editor
+  - role: Release Manager
+    permissions:
+    - release#create
+    - reports#view
+    - all#audit
+    - dashboard#create
+    - folder#create_top_level
+    - risk_profile#edit
+  - role: ITMP Release Manager
+    permissions:
+    - release#create
+    - reports#view
+    - all#audit
+    - dashboard#create
+    - folder#create_top_level
+    - risk_profile#edit
+  - role: Q&B Motorretail
+    permissions:
+    - release#create
+    - template#create
+  - role: Admin ITMP
+    permissions:
+    - admin
+  - role: GTF
+    permissions:
+    - release#create
+    - template#create
+  - role: CISL DEV
+  - role: Q&B LIFE
+    permissions:
+    - release#create
+  - role: Template Designer
+    permissions:
+    - template#create
+    - reports#view
+    - global_variables#edit
+    - all#audit
+    - dashboard#create
+  - role: Batch
+  - role: DBA
+  - role: testRole
+    permissions:
+    - admin
+  - role: GDF
+    permissions:
+    - release#create
+    - template#create
+    - reports#view
+    - all#audit
+  - role: Operations
+    permissions:
+    - global_calendar#edit_blackout
+    - global_variables#edit
+    - application#edit
+    - environment#edit
+    - all#audit
+    - folder#create_top_level
+    - risk_profile#edit
+    - release#create
+    - template#create
+    - reservation#edit
+    - reports#view
+    - security#edit
+  - role: BMPDI
+- directory: ABS POC
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    roles:
+    - CISL DEV
+    users:
+    - admin
+    permissions:
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - CISL DEV
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: archive
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: BMPDI
+  teams:
+  - name: Folder Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: BMPDI/Nexus Builds
+  teams:
+  - name: Folder Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: BMPDI/Release Process
+  teams:
+  - name: Folder Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - BMPDI
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Customer Portal
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: DBA
+  teams:
+  - name: Folder Owner
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+- directory: DBA/Ajai
+  teams:
+  - name: Folder Owner
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    roles:
+    - DBA
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+- directory: Dummy
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Italy
+    users:
+    - ITMPItaly
+    permissions:
+    - delivery_pattern#view
+    - release#start
+    - template#view
+    - folder#view
+    - template#create_release
+    - dashboard#edit
+    - release#abort
+    - dashboard#view
+    - release#view
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Dummy/Dummie
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Italy
+    users:
+    - ITMPItaly
+    permissions:
+    - delivery_pattern#view
+    - release#start
+    - template#view
+    - folder#view
+    - template#create_release
+    - dashboard#edit
+    - release#abort
+    - dashboard#view
+    - release#view
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Internal Development
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP AAL
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP-ASIA
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP-ASIA/Release
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Global
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Deliver
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Global/Staging Dashboards (Migrated)
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Staging Dashboards (Migrated)/OE Staging Dashboards (Migrated)
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Config Dashboards (Migrated)
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Config Dashboards (Migrated)/OE Config Dashboards
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Release
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Global/Development
+  teams:
+  - name: Italy
+    users:
+    - ITMPItaly
+    permissions:
+    - template#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Build
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Deploy
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Global/Deploy/In Progress
+  teams:
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: View All
+    roles:
+    - BMPDI
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: CISL DEV TEAM
+    roles:
+    - CISL DEV
+    permissions:
+    - release#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+    - release#edit_task
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP IberoLatAm
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP IberoLatAm/Deploy
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP IberoLatAm/Release
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Italy
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Italy/Release
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Development
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Development/Log Retrieval
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Development/Branching
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Development/Dummy
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Build and Deploy
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Deploy
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deploy/DevWorkplace
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deploy/Backend
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Deploy/Batch
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Deploy/Daily Deploy
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deploy/Promote
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deploy/Frontend
+  teams:
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Management
+    roles:
+    - ITMP Release Manager
+    permissions:
+    - template#view
+    - folder#view
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Deploy/Frontend/In Progress
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deploy/Frontend/Manual
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Deploy/Services
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Ordering
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Ordering/Initial
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Ordering/In Progress
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Ordering/Change
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Test
+  teams:
+  - name: Folder Owner
+    roles:
+    - GTF
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    roles:
+    - GTF
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    roles:
+    - GTF
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Release
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - template#edit
+    - release#start
+    - template#view
+    - template#create_release
+    - release#abort
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Release/Release Versions
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - template#edit
+    - release#start
+    - template#view
+    - template#create_release
+    - release#abort
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Release/JIra trigger
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - template#edit
+    - release#start
+    - template#view
+    - template#create_release
+    - release#abort
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Release/Code Quality
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Management
+    roles:
+    - Release Manager
+    permissions:
+    - template#edit
+    - release#start
+    - template#view
+    - template#create_release
+    - release#abort
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Staging Dashboards (Migrated)
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/INTAKE
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Release Notes
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/System
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Build
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Config Dashboards (Migrated)
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Config Dashboards (Migrated)/OE Config Dashboards (Migrated)
+  teams:
+  - name: View All
+    roles:
+    - View all
+    permissions:
+    - delivery_pattern#view
+    - delivery#view
+    - trigger#view_trigger
+    - template#view
+    - folder#view
+    - dashboard#view
+    - group#view
+    - release#view
+  - name: Folder Viewer
+    roles:
+    - GTF
+    permissions:
+    - release#start
+    - template#view
+    - folder#view
+    - release#view
+  - name: Folder Owner
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    roles:
+    - ITMP Release Manager
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Release Managers
+    roles:
+    - ITMP Release Manager
+    - Operations
+    - Release Manager
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - template#view
+    - folder#view
+    - release#abort
+    - folder#edit
+    - release#view
+- directory: ITMP Product/Deliver
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Product/Deliver/Environment
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Product/Deliver/Stage
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: ITMP Product/Deliver/Tools
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP Project (generic)
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP Project (generic)/Customer Extensions
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+- directory: ITMP-SCB
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP-SCB/Deploy
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: ITMP-SCB/Release
+  teams:
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: Midcorp
+  teams:
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Midcorp
+    users:
+    - A8895
+    - puransingh.chandel
+    permissions:
+    - folder#edit_variables
+    - release#edit_precondition
+    - release#edit
+    - folder#edit_configuration
+    - template#edit
+    - group#view
+    - release#lock_task
+    - delivery_pattern#view
+    - group#edit
+    - template#lock_task
+    - folder#view
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - dashboard#view
+    - release#edit_task
+    - release#task_transition
+    - release#edit_task_attachments
+    - delivery_pattern#edit
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - delivery#edit
+    - template#create_release
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - delivery#view
+    - delivery#edit_tracked_item
+    - release#start
+    - release#edit_blackout
+    - template#view
+    - release#edit_failure_handler
+    - template#edit_precondition
+    - dashboard#edit
+    - release#abort
+    - folder#edit
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+- directory: QB Life
+  teams:
+  - name: Template Owner
+    roles:
+    - Q&B LIFE
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    roles:
+    - Q&B LIFE
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    roles:
+    - Q&B LIFE
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Samples & Tutorials
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release mgmt.
+    permissions:
+    - release#edit
+    - template#edit
+    - release#start
+    - release#reassign_task
+    - template#view
+    - template#create_release
+    - release#edit_security
+    - release#abort
+    - release#view
+    - release#edit_task
+  - name: Release Managers
+    permissions:
+    - release#edit
+    - release#start
+    - release#reassign_task
+    - template#view
+    - template#create_release
+    - release#edit_security
+    - release#abort
+    - release#view
+    - release#edit_task
+  - name: QA
+    users:
+    - admin
+    permissions:
+    - release#view
+    - release#edit_task
+  - name: Ops
+    permissions:
+    - release#edit_task
+    - release#view
+  - name: Dev
+    permissions:
+    - release#edit_task
+    - release#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Manager
+    users:
+    - admin
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#edit_security
+    - release#lock_task
+    - folder#view
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#start
+    - release#edit_blackout
+    - template#view
+    - release#edit_failure_handler
+    - release#abort
+- directory: Testing
+  teams:
+  - name: Template Owner
+    users:
+    - srini
+    - josephine.j
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - srini
+    - X7631
+    - admin
+    - josephine.j
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - josephine.j
+    - admin
+    - srini
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Testing/Sprint Value Stream Mapping
+  teams:
+  - name: Folder Owner
+    users:
+    - admin
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Template Owner
+    users:
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_triggers
+    - template#edit_precondition
+    - template#edit_security
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Release Admin
+    users:
+    - admin
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_security
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task
+- directory: Testing/TemplateReplacement
+  teams:
+  - name: Template Owner
+    users:
+    - srini
+    - josephine.j
+    - admin
+    permissions:
+    - template#edit
+    - trigger#view_trigger
+    - template#lock_task
+    - template#view
+    - folder#view
+    - template#edit_precondition
+    - template#create_release
+    - template#edit_failure_handler
+  - name: Folder Owner
+    users:
+    - srini
+    - X7631
+    - admin
+    - josephine.j
+    permissions:
+    - folder#edit_variables
+    - delivery_pattern#edit
+    - folder#edit_configuration
+    - delivery#edit
+    - group#view
+    - delivery_pattern#view
+    - group#edit
+    - delivery#view
+    - delivery#edit_tracked_item
+    - folder#view
+    - dashboard#edit
+    - folder#edit_security
+    - folder#edit
+    - dashboard#view
+  - name: Release Admin
+    users:
+    - josephine.j
+    - admin
+    - srini
+    permissions:
+    - release#edit_precondition
+    - release#edit
+    - release#task_transition
+    - release#edit_task_attachments
+    - trigger#view_trigger
+    - release#reassign_task
+    - release#edit_task_input_output_properties
+    - release#edit_task_tags
+    - release#edit_task_description
+    - trigger#edit_trigger
+    - release#view
+    - release#lock_task
+    - release#start
+    - release#edit_blackout
+    - release#edit_failure_handler
+    - folder#view
+    - release#abort
+    - release#edit_task_script
+    - release#edit_task_configuration_facet
+    - release#edit_task_flag
+    - release#edit_task_dates
+    - release#edit_task

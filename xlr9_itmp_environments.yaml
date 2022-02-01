@@ -1,0 +1,73 @@
+---
+apiVersion: xl-release/v1
+kind: Environments
+spec:
+  stages:
+  - TEST
+  - DEMO
+  - PROD
+  - DEV
+  - PERF
+  - DEV20
+  - COREUPGRADE
+  - MyStage
+  - HOTFIX2
+  - HOTFIX
+  - UPGRADE
+  - INTAKE
+  - PrePROD
+  - TEMP
+  labels:
+  - name: ITMP Tools
+    color: '#65747c'
+  - name: OE-AGCS
+    color: '#991c71'
+  - name: OE-Italy
+    color: '#991c71'
+  - name: AWS-E1
+    color: '#00875a'
+  - name: OE-Australia
+    color: '#991c71'
+  - name: OE-Spain
+    color: '#991c71'
+  - name: ITMP Product
+    color: '#0079bc'
+  - name: OE
+    color: '#991c71'
+  - name: XLR Testing
+    color: '#ffab00'
+  environments:
+  - name: COREUPGRADE
+    stage: COREUPGRADE
+  - name: Intake
+    stage: INTAKE
+  - name: UPGRADE
+    stage: UPGRADE
+    labels:
+    - ITMP Product
+  - name: HOTFIX2
+    stage: HOTFIX2
+    labels:
+    - ITMP Product
+  - name: DEV
+    stage: DEV
+    labels:
+    - ITMP Product
+  - name: TEST
+    stage: TEST
+    labels:
+    - ITMP Product
+  - name: DEV20
+    stage: DEV20
+    labels:
+    - ITMP Product
+  - name: DEMO
+    stage: DEMO
+    labels:
+    - ITMP Product
+  - name: PERF
+    stage: PERF
+  - name: HOTFIX
+    stage: HOTFIX
+    labels:
+    - ITMP Product

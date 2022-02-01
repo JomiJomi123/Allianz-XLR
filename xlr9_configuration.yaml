@@ -1,0 +1,333 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: ABS POC
+- directory: archive
+- directory: BMPDI
+  children:
+  - directory: Nexus Builds
+  - directory: Release Process
+- directory: Customer Portal
+- directory: DBA
+  children:
+  - directory: Ajai
+- directory: Dummy
+  children:
+  - directory: Dummie
+- directory: Internal Development
+- directory: ITMP AAL
+- directory: ITMP-ASIA
+  children:
+  - directory: Release
+- directory: ITMP Global
+  children:
+  - directory: Deliver
+  - directory: Staging Dashboards (Migrated)
+    children:
+    - directory: OE Staging Dashboards (Migrated)
+  - directory: Config Dashboards (Migrated)
+    children:
+    - directory: OE Config Dashboards
+  - directory: Release
+  - directory: Development
+  - directory: Build
+  - directory: Deploy
+    children:
+    - directory: In Progress
+  - name: Service Owner Jenkins
+    type: jenkins.Server
+    url: https://jenkins-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz
+    username: tmu-itmp-001@allianz.at-admin-edit-view
+    password: !value "jenkins_Server_Service_Owner_Jenkins_password"
+  - name: Service-owners Nexus
+    type: nexus.Server
+    url: https://nexus-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz/
+    username: admin
+    password: !value "nexus_Server_Service_owners_Nexus_password"
+    serverVersion: Nexus v3+
+  - name: Service-owners Sonarqube
+    type: sonar.Server
+    url: https://sonarqube-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz
+    username: admin
+    password: !value "sonar_Server_Service_owners_Sonarqube_password"
+- directory: ITMP IberoLatAm
+  children:
+  - directory: Deploy
+  - directory: Release
+  - name: Iberolatam Nexus EC1
+    type: nexus.Server
+    url: https://nexus-adp-tools-itmp-iberolatam.apps.crp.ec1.aws.aztec.cloud.allianz/
+    username: admin
+    password: !value "nexus_Server_Iberolatam_Nexus_EC1_password"
+    serverVersion: Nexus v3+
+  - name: Jenkins Iberolatam EC1
+    type: jenkins.Server
+    url: https://jenkins-adp-tools-itmp-iberolatam.apps.crp.ec1.aws.aztec.cloud.allianz/
+    username: tmu-itmp-001@allianz.at-admin-edit-view
+    password: !value "jenkins_Server_Jenkins_Iberolatam_EC1_password"
+- directory: ITMP Italy
+  children:
+  - directory: Release
+- directory: ITMP Product
+  children:
+  - directory: Development
+    children:
+    - directory: Log Retrieval
+    - directory: Branching
+    - directory: Dummy
+  - directory: Build and Deploy
+  - directory: Deploy
+    children:
+    - directory: DevWorkplace
+    - directory: Backend
+    - directory: Batch
+    - directory: Daily Deploy
+    - directory: Promote
+    - directory: Frontend
+      children:
+      - directory: In Progress
+      - directory: Manual
+    - directory: Services
+  - directory: Ordering
+    children:
+    - directory: Initial
+    - directory: In Progress
+    - directory: Change
+  - directory: Test
+  - directory: Release
+    children:
+    - directory: Release Versions
+    - directory: JIra trigger
+    - directory: Code Quality
+  - directory: Staging Dashboards (Migrated)
+  - directory: INTAKE
+  - directory: Release Notes
+  - directory: System
+  - directory: Build
+  - directory: Config Dashboards (Migrated)
+    children:
+    - directory: OE Config Dashboards (Migrated)
+  - directory: Deliver
+    children:
+    - directory: Environment
+    - directory: Stage
+    - directory: Tools
+  - name: Service Owner Jenkins
+    type: jenkins.Server
+    url: https://jenkins-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz
+    username: tmu-itmp-001@allianz.at-admin-edit-view
+    password: !value "jenkins_Server_Service_Owner_Jenkins_password_0"
+  - name: Service-owners Nexus
+    type: nexus.Server
+    url: https://nexus-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz/
+    authenticationMethod: Basic
+    username: admin
+    password: !value "nexus_Server_Service_owners_Nexus_password_0"
+    serverVersion: Nexus v3+
+  - name: Service-owners Sonarqube
+    type: sonar.Server
+    url: https://sonarqube-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz
+    authenticationMethod: Basic
+    username: admin
+    password: !value "sonar_Server_Service_owners_Sonarqube_password_0"
+- directory: ITMP Project (generic)
+  children:
+  - directory: Customer Extensions
+- directory: ITMP-SCB
+  children:
+  - directory: Deploy
+  - directory: Release
+- directory: Midcorp
+- directory: QB Life
+- directory: Samples & Tutorials
+- directory: Testing
+  children:
+  - directory: Sprint Value Stream Mapping
+  - directory: TemplateReplacement
+- name: ASE1 Openshift cluster
+  type: itmpkeepass.Server
+  url: console.crp.ase1.aws.aztec.cloud.allianz
+  clusterUrl: console.crp.ase1.aws.aztec.cloud.allianz
+  keepass_git_user: tmu-itmp-001
+  keepass_git_password: !value "itmpkeepass_Server_ASE1_Openshift_cluster_keepass_git_password"
+  keepass_store_password: !value "itmpkeepass_Server_ASE1_Openshift_cluster_keepass_store_password"
+  cert_keystore_password: !value "itmpkeepass_Server_ASE1_Openshift_cluster_cert_keystore_password"
+  gitOrg: it-master-platform
+  gitRepo: keepassdb
+  pathToKeepassStore: ITMP-TechSetup.kdbx
+  keepassGroup: TechnicalUsers
+  keepassEntry: TMU-ITMP-001
+  keepassFileAttachment: tmu-itmp-001.pfx
+- name: EC1 Openshift cluster
+  type: itmpkeepass.Server
+  url: console.crp.ec1.aws.aztec.cloud.allianz
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+  clusterUrl: console.crp.ec1.aws.aztec.cloud.allianz
+  keepass_git_user: tmu-itmp-001
+  keepass_git_password: !value "itmpkeepass_Server_EC1_Openshift_cluster_keepass_git_password"
+  keepass_store_password: !value "itmpkeepass_Server_EC1_Openshift_cluster_keepass_store_password"
+  cert_keystore_password: !value "itmpkeepass_Server_EC1_Openshift_cluster_cert_keystore_password"
+  gitOrg: it-master-platform
+  gitRepo: keepassdb
+  pathToKeepassStore: ITMP-TechSetup.kdbx
+  keepassGroup: TechnicalUsers
+  keepassEntry: TMU-ITMP-001
+  keepassFileAttachment: tmu-itmp-001.pfx
+- name: EW3 Openshift Cluster
+  type: itmpkeepass.Server
+  url: console.crp.ew3.aws.aztec.cloud.allianz
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+  clusterUrl: console.crp.ew3.aws.aztec.cloud.allianz
+  keepass_git_user: tmu-itmp-001
+  keepass_git_password: !value "itmpkeepass_Server_EW3_Openshift_Cluster_keepass_git_password"
+  keepass_store_password: !value "itmpkeepass_Server_EW3_Openshift_Cluster_keepass_store_password"
+  cert_keystore_password: !value "itmpkeepass_Server_EW3_Openshift_Cluster_cert_keystore_password"
+  gitOrg: it-master-platform
+  gitRepo: keepassdb
+  pathToKeepassStore: ITMP-TechSetup.kdbx
+  keepassGroup: TechnicalUsers
+  keepassEntry: TMU-ITMP-001
+  keepassFileAttachment: tmu-itmp-001.pfx
+- name: ITMP Confluence
+  type: confluence.Server
+  url: https://cmp.allianz.net/
+  authenticationMethod: Basic
+  username: itmp.releasemanagement
+  password: !value "confluence_Server_ITMP_Confluence_password"
+- name: ITMP Jenkins
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-tools.apps.crp.ec1.aws.aztec.cloud.allianz
+  authenticationMethod: PAT
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_ITMP_Jenkins_password"
+- name: ITMP-JIRA
+  type: jira.Server
+  url: https://jmp.allianz.net
+  authenticationMethod: Basic
+  username: itmp.releasemanagement
+  password: !value "jira_Server_ITMP_JIRA_password"
+- name: ITMP-Nexus
+  type: nexus.Server
+  url: https://nexus-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz
+  authenticationMethod: Basic
+  username: admin
+  password: !value "nexus_Server_ITMP_Nexus_password"
+  serverVersion: Nexus v3+
+- name: ITMP-Sonarqube
+  type: sonar.Server
+  url: https://sonarqube-adp-tools-itmp-tools.apps.crp.ec1.aws.aztec.cloud.allianz/
+  authenticationMethod: Basic
+  username: admin
+  password: !value "sonar_Server_ITMP_Sonarqube_password"
+- name: ITMP Tosca
+  type: tosca.Server
+  url: http://44.130.49.233:801/DistributionServerService/ManagerService.svc
+  authenticationMethod: Basic
+  username: XLrelease
+  password: !value "tosca_Server_ITMP_Tosca_password"
+- name: Jenkins ITMP AAL AP2
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-aal.apps.ap2.crp.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_AAL_AP2_password"
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+- name: Jenkins ITMP AAL EC1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-aal.apps.crp.ec1.aws.aztec.cloud.allianz
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_AAL_EC1_password"
+- name: Jenkins ITMP AGCS
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-agcs.apps.crp.ec1.aws.aztec.cloud.allianz
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_AGCS_password"
+- name: Jenkins ITMP Asia ASE1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-asia.apps.crp.ase1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_Asia_ASE1_password"
+- name: Jenkins ITMP France
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-france.apps.crp.ew3.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_France_password"
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+- name: Jenkins ITMP Germany EC1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-germany.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_Germany_EC1_password"
+- name: Jenkins ITMP Greece
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-greece.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_Greece_password"
+- name: Jenkins ITMP GSI
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-gsi.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_GSI_password"
+- name: Jenkins ITMP Iberolatam
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-iberolatam.apps.crp.ew3.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_Iberolatam_password"
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+- name: Jenkins ITMP Italy
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-italy.apps.crp.ew3.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_Italy_password"
+  proxyHost: proxy.ec1.aws.aztec.cloud.allianz
+  proxyPort: "8888"
+- name: Jenkins ITMP SCB ASE1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-scb.apps.crp.ase1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_SCB_ASE1_password"
+- name: Jenkins ITMP SCB EC1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-scb.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_SCB_EC1_password"
+- name: Jenkins ITMP UK EC1
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-itmp-uk.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Jenkins_ITMP_UK_EC1_password"
+- name: jira test
+  type: jira.Server
+  url: https://jmp.allianz.net
+  authenticationMethod: Basic
+  username: itmp.linux
+  password: !value "jira_Server_jira_test_password"
+- name: Op
+  type: openshift.server
+  serverUrl: https://console.crp.ec1.aws.aztec.cloud.allianz/
+  skipSSL: true
+- name: Service Owner Jenkins global
+  type: jenkins.Server
+  url: https://jenkins-adp-tools-service-owners.apps.crp.ec1.aws.aztec.cloud.allianz/
+  username: tmu-itmp-001@allianz.at-admin-edit-view
+  password: !value "jenkins_Server_Service_Owner_Jenkins_global_password"
+- name: Teams
+  type: msteams.Server
+  url: https://teams.microsoft.com/l/channel/19%3a2bdc0847d2ff46d2b362747de47cb487%40thread.tacv2/General?groupId=270b1133-4e2e-43a6-9b85-60b9cfadf7d6&tenantId=6e06e42d-6925-47c6-b9e7-9581c7ca302a
+  userName: test
+- name: Test1
+  type: NeoLoad.Controller
+  NL_Host: 44.130.49.88
+  username: Azure
+  password: !value "NeoLoad_Controller_Test1_password"
+- name: Test1
+  type: NeoLoad.TeamServer
+  TeamServerHost: http://44.130.49.228:7070/
+  username: admin
+  password: !value "NeoLoad_TeamServer_Test1_password"
+  licenceID: MC0CFDjVLrImje2PN20rdHGufOmjBwytAhUAidNDcQaOisuEjo0OqbF9FmnEnPA

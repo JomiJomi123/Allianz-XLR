@@ -1,0 +1,832 @@
+---
+apiVersion: xl-release/v1
+kind: Templates
+spec:
+- directory: ITMP Product
+  children:
+  - directory: Build
+    children:
+    - template: GDF Asset Build
+      scheduledStartDate: 2020-05-28T03:30:00Z
+      dueDate: 2020-06-16T16:07:37.980Z
+      phases:
+      - phase: New Phase
+        tasks:
+        - name: ${app} Build
+          type: jenkins.Build
+          jenkinsServer: Service Owner Jenkins global
+          jobName: ITMP-Core/job/${app}-build
+          variableMapping:
+            pythonScript.buildNumber: ${buildNumber}
+        - name: Get Build Version
+          type: jenkins.ConsoleOutFindString
+          server: Service Owner Jenkins global
+          jobPath: job/ITMP-Core/job/${app}-build
+          buildNumber: ${buildNumber}
+          leftSearch: -DnewVersion=
+          variableMapping:
+            pythonScript.searchResult: ${buildVersion}
+      variables:
+      - type: xlrelease.StringVariable
+        key: buildNumber
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: buildVersion
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: app
+      extensions:
+      - name: Dashboard
+        type: xlrelease.Dashboard
+        owner: admin
+        tiles:
+        - name: Release progress
+          type: xlrelease.ReleaseProgressTile
+        - name: Release summary
+          type: xlrelease.ReleaseSummaryTile
+        - name: Resource usage
+          type: xlrelease.ResourceUsageTile
+        - name: Release timeline
+          type: xlrelease.TimelineTile
+        - name: Release health
+          type: xlrelease.ReleaseHealthTile
+        parentTemplate: Applications/Folder049cbbca6af447ae88be4c387e558ace/Foldere551aead4d1447d099d781613377764a/Releaseef79c4ee0e364e59aeea4695239f1028
+      riskProfile: Default risk profile
+    - template: ITMP AIRWAVE_Build
+      scheduledStartDate: 2021-07-09T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: Airwave_Build
+          type: xlrelease.CreateReleaseTask
+          variableMapping:
+            templateVariables[0].value: ${SKIP_AIRWAVE_BUILD}
+            templateVariables[3].value: ${SKIP_FACADE_BUILD}
+          newReleaseTitle: Airwave Build
+          templateVariables:
+          - type: xlrelease.BooleanVariable
+            key: SKIP_AIRWAVE_BUILD
+            description: Check, if the airwave build need to be skipped. Provide AIRWAVE_VERSION,
+              if checked to consider for Docker image creation.
+          - type: xlrelease.StringVariable
+            key: AIRWAVE_ABS_GIT_BRANCH
+            value: ${AIRWAVE_ABS_GIT_BRANCH}
+          - type: xlrelease.StringVariable
+            key: AIRWAVE_VERSION
+            requiresValue: false
+            description: Needed only when AIRWAVE_BUILD is SKIPPED. Else, consider
+              the normal version generation.
+            value: ${AIRWAVE_VERSION}
+          - type: xlrelease.BooleanVariable
+            key: SKIP_FACADE_BUILD
+            description: Check, if the facade build need to be skipped. Provide FACADE_VERSION,
+              if checked, to consider for Docker image creation.
+          - type: xlrelease.StringVariable
+            key: FACADE_ABS_GIT_BRANCH
+            requiresValue: false
+            description: Specify the ABS GIT branch from which FACADE build need to
+              be taken. Not Applicable if SKIP_FACADE_BUILD is checked
+            value: ${FACADE_ABS_GIT_BRANCH}
+          - type: xlrelease.StringVariable
+            key: FACADE_VERSION
+            requiresValue: false
+            description: Needed only when FACADE_BUILD is SKIPPED. Else, consider
+              the normal version generation.
+            value: ${FACADE_VERSION}
+          - type: xlrelease.StringVariable
+            key: SKIP_FACADE_TEST_COVERAGE_BUILD
+            inherited: true
+            value: "YES"
+          - type: xlrelease.StringVariable
+            key: SKIP_FACADE_SONAR_BUILD
+            inherited: true
+            value: "NO"
+          createdReleaseId: ${airwaveBuild}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/AIRWAVE Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${airwaveBuild}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: airwaveBuild
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.BooleanVariable
+        key: SKIP_AIRWAVE_BUILD
+        description: Check, if the airwave build need to be skipped. Provide AIRWAVE_VERSION,
+          if checked to consider for Docker image creation.
+      - type: xlrelease.StringVariable
+        key: AIRWAVE_ABS_GIT_BRANCH
+        value: master
+      - type: xlrelease.StringVariable
+        key: AIRWAVE_VERSION
+        requiresValue: false
+        description: Needed only when AIRWAVE_BUILD is SKIPPED. Else, consider the
+          normal version generation.
+      - type: xlrelease.BooleanVariable
+        key: SKIP_FACADE_BUILD
+        description: Check, if the facade build need to be skipped. Provide FACADE_VERSION,
+          if checked, to consider for Docker image creation.
+      - type: xlrelease.StringVariable
+        key: FACADE_ABS_GIT_BRANCH
+        value: master
+      - type: xlrelease.StringVariable
+        key: FACADE_VERSION
+        requiresValue: false
+        description: Needed only when FACADE_BUILD is SKIPPED. Else, consider the
+          normal version generation.
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_AIRWAVE_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_CISL_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: CISL_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_CISL_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GitBranch
+            description: Git Branch for Build
+            value: ${GitBranch}
+          - type: xlrelease.StringVariable
+            key: SKIP_SONAR_BUILD
+            value: ${SKIP_SONAR_BUILD}
+          - type: xlrelease.StringVariable
+            key: CONFIG_TYPE
+            value: property
+          - type: xlrelease.StringVariable
+            key: SKIP_TEST_COVERAGE_BUILD
+            value: ${SKIP_TEST_COVERAGE_BUILD}
+          createdReleaseId: ${BuildlID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/CISL Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildlID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - Sprint
+          - Release_Candidate
+          - master
+          - 20.0.45_HF
+          - 33.0.4_HF
+          - MPDI-35083
+          - 34.0.1_HF
+          - 35.0.3_HF
+          - 35.0.19_HF
+          - 40.0.3_HF
+          - MPDI-40229
+          - MPDI-40816
+          - MPDI-41446
+          - 41.0.2_HF
+          - 41.0.1_HF
+          - 20.0.34_HF
+          - MPDI-43808
+          - MPDI-41588
+          - MPDI-43125
+          - MPDI-45815
+          - 42.0.2_HF
+          - MPDI-37137-midCorp-migration
+          - MPDI-47459
+          - 43.0.2_HF
+          - ABS_V205
+          - MPDI-50107
+          - ABS_V205
+          - MPDI-50476
+          - 44.0.2_HF
+          - 45.0.2_HF
+          - MPDI-53849
+          - MPDI-37137-midCorp-migration
+          - MPDI-56617
+          - 50.0.7_HF
+          - 51.0.7_HF
+          - MPDI-61327
+          - MPDI-61525
+          - 52.0.14_HF
+          - 53.0.10_HF
+          - 53.0.67_HF
+          - MPDI-69141
+          - 54.0.1_HF
+          - 55.0.44_HF
+          - MPDI-73100
+          - Midcorp_Included
+          - 60.0.57_HF
+          - ABS_V210
+          - 61.0.43_HF
+          - MPDI-78380
+          - 62.0.35_HF
+          - MPDI-80240
+          - MPDI-78380
+          - MPDI-82080
+          - MPDI-82637
+          - 63.0.25_HF
+          - MPDI-76321
+          - MPDI-76321
+          - MPDI-87107
+          - MPDI-89609
+          - MPDI-90825
+          - 70.0.10_HF
+          - MPDI-92495
+          - 71.0.15_HF
+          - 72.0.39_HF
+          - 61.0.43.17_HF
+          - MPDI-96536
+          - 73.0.44_HF
+          - MPDI-98021
+          - 74.0.29_HF
+          - MPDI-99597
+          - MPDI-100476
+          - 75.0.24_HF
+          - MPDI-102649
+          - 80.0.23_HF
+          - ABS_V220
+          - MPDI-105651
+          - MPDI-106067
+          - 81.0.13_HF
+          - MPDI-107269
+          - 82.0.29_HF
+          - ABS_V221
+          - 80.0.23.17-HF-CISL
+          - MPDI-112708
+          - 84.0.41_HF
+          - log4j_fix
+          - MPDI-115697
+          - MPDI-115266
+          - 90.0.47_HF
+          - MPDI-120625
+          - 91.0.12_HF
+      - type: xlrelease.StringVariable
+        key: BuildlID
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        description: Skip Sonar Build ?
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "NO"
+          - "YES"
+        value: "NO"
+      - type: xlrelease.StringVariable
+        key: SKIP_TEST_COVERAGE_BUILD
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "YES"
+          - "NO"
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_CISL_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_CONFIGSUITE_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: CONFIGSUITE_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_CONFIGSUITE_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GitBranch
+            description: Git Branch for Build
+            value: ${GitBranch}
+          - type: xlrelease.StringVariable
+            key: SKIP_SONAR_BUILD
+            value: ${SKIP_SONAR_BUILD}
+          - type: xlrelease.StringVariable
+            key: SKIP_TEST_COVERAGE_BUILD
+            value: ${SKIP_TEST_COVERAGE_BUILD}
+          createdReleaseId: ${BuildID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/CONFIGSUITE Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - Sprint
+          - Release_Candidate
+          - master
+          - 33.0.4_HF
+          - 34.0.1_HF
+          - 35.0.3_HF
+          - 42.0.2_HF
+          - 45.0.2_HF
+          - 50.0.7_HF
+          - 53.0.10_HF
+          - 53.0.67_HF
+          - 54.0.1_HF
+          - 55.0.44_HF
+          - 60.0.57_HF
+          - ABS_V210
+          - 61.0.43_HF
+          - 62.0.35_HF
+          - MPDI-80240
+          - ABS_V210
+          - 63.0.25_HF
+          - 70.0.10_HF
+          - 71.0.15_HF
+          - 71.0.15_HF
+          - 72.0.39_HF
+          - 73.0.44_HF
+          - 74.0.29_HF
+          - 75.0.24_HF
+          - 80.0.23_HF
+          - ABS_V220
+          - 81.0.13_HF
+          - 82.0.29_HF
+          - ABS_V221
+          - 84.0.41_HF
+          - 90.0.47_HF
+          - 91.0.12_HF
+      - type: xlrelease.StringVariable
+        key: BuildID
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        description: Skip Sonar Build ?
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "NO"
+          - "YES"
+        value: "NO"
+      - type: xlrelease.StringVariable
+        key: SKIP_TEST_COVERAGE_BUILD
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "YES"
+          - "NO"
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_CONFIGSUITE_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_MERGE_PULLRQST_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: PullRequest_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_MERGE_PULLREQUEST_Build
+          createdReleaseId: ${MergeID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/Merge_PullRequest_Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${MergeID}
+        color: '#0079BC'
+      tags:
+      - mergepr
+      variables:
+      - type: xlrelease.StringVariable
+        key: MergeID
+        requiresValue: false
+        showOnReleaseStart: false
+      abortOnFailure: true
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_MERGE_PULLRQST_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_MIDCORP-BFF_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: MIDCORP-BFF_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_MIDCORP-BFF_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: PROJECT
+            inherited: true
+            value: midcorp-bff
+          createdReleaseId: ${BuildlID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/MIDCORP-BFF Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildlID}
+        - name: Get Build Version
+          type: xlrelease.ScriptTask
+          script: |-
+            releaseId = releaseVariables['BuildlID']
+            myVariables = releaseApi.getVariableValues(releaseId)
+
+            for key in myVariables:
+                if 'midcorpbffBuildVersion' in key:
+                    releaseVariables['BFFVersion'] = myVariables[key]
+                    print(releaseVariables['BFFVersion'])
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: BuildlID
+        requiresValue: false
+        showOnReleaseStart: false
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_MIDCORP_BFF_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_MIDCORP-FE_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: MIDCORP-FE_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_MIDCORP-FE_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: PROJECT
+            inherited: true
+            value: midcorp-fe
+          createdReleaseId: ${BuildlID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/MIDCORP-FE Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildlID}
+        - name: Get Build Version
+          type: xlrelease.ScriptTask
+          script: |-
+            releaseId = releaseVariables['BuildlID']
+            myVariables = releaseApi.getVariableValues(releaseId)
+
+            for key in myVariables:
+                if 'midcorpfeBuildVersion' in key:
+                    releaseVariables['FEVersion'] = myVariables[key]
+                    print(releaseVariables['FEVersion'])
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: BuildlID
+        requiresValue: false
+        showOnReleaseStart: false
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_MIDCORP_FE_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_MIDCORP-FE_Bundle_Build
+      scheduledStartDate: 2021-04-19T03:30:00Z
+      phases:
+      - phase: Bundle Build
+        tasks:
+        - name: Midcorp-FE Bundle Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: Midcorp-FE Bundle Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GIT_BRANCH
+            value: ${GIT_BRANCH}
+          createdReleaseId: ${BundleID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/MIDCORP-FE Bundle
+          folder: ITMP Product/Build
+        - name: Wait for completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BundleID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: GIT_BRANCH
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - migrationDevelop
+          - develop
+        value: migrationDevelop
+      - type: xlrelease.StringVariable
+        key: BundleID
+        requiresValue: false
+        showOnReleaseStart: false
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_MIDCORP_FE_Bundle_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_RAP_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: RAP_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_RAP_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GitBranch
+            description: Git Branch for Build
+            value: ${GitBranch}
+          - type: xlrelease.StringVariable
+            key: SKIP_SONAR_BUILD
+            value: ${SKIP_SONAR_BUILD}
+          - type: xlrelease.StringVariable
+            key: SKIP_TEST_COVERAGE_BUILD
+            value: ${SKIP_TEST_COVERAGE_BUILD}
+          createdReleaseId: ${BuildlID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/RAP Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildlID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - Sprint
+          - Release_Candidate
+          - master
+          - 33.0.4_HF
+          - 20.0.45_HF
+          - MPDI-35083
+          - 34.0.1_HF
+          - 35.0.3_HF
+          - 35.0.19_HF
+          - 40.0.3_HF
+          - MPDI-40229
+          - MPDI-40816
+          - MPDI-41446
+          - 20.0.34_HF
+          - MPDI-41588
+          - MPDI-43125
+          - 42.0.2_HF
+          - MPDI-45815
+          - MPDI-37137-midCorp-migration
+          - MPDI-47459
+          - 43.0.2_HF
+          - ABS_V205
+          - MPDI-50107
+          - 44.0.2_HF
+          - MPDI-53849
+          - 41.0.1_HF
+          - MPDI-37137-midCorp-migration
+          - 45.0.2_HF
+          - MPDI-56617
+          - 50.0.7_HF
+          - 51.0.7_HF
+          - 51.0.15
+          - MPDI-61525
+          - 52.0.14_HF
+          - MPDI-57966
+          - 53.0.10_HF
+          - MPDI-67696
+          - 53.0.67_HF
+          - MPDI-69141
+          - 54.0.1_HF
+          - 55.0.44_HF
+          - MPDI-73100
+          - Midcorp_Included
+          - 60.0.57_HF
+          - ABS_V210
+          - 61.0.43_HF
+          - MPDI-78380
+          - 62.0.35_HF
+          - MPDI-80240
+          - MPDI-78380
+          - 63.0.25_HF
+          - MPDI-76321
+          - MPDI-85649-Fix
+          - MPDI-87107
+          - MPDI-89609
+          - MPDI-90825
+          - 70.0.10_HF
+          - MPDI-92495
+          - 71.0.15_HF
+          - 72.0.39_HF
+          - 72.0.39_HF
+          - MPDI-96536
+          - 73.0.44_HF
+          - MPDI-98021
+          - 74.0.29_HF
+          - MPDI-99597
+          - 61.0.43.17_HF
+          - MPDI-100476
+          - 75.0.24_HF
+          - MPDI-102649
+          - 80.0.23_HF
+          - ABS_V220
+          - MPDI-106067
+          - 81.0.13_HF
+          - 82.0.29_HF
+          - ABS_V221
+          - MPDI-112708
+          - 84.0.41_HF
+          - log4j_fix
+          - MPDI-115697
+          - MPDI-115266
+          - 90.0.47_HF
+          - RegChanges
+          - RegChanges
+          - MPDI-120625
+          - 91.0.12_HF
+      - type: xlrelease.StringVariable
+        key: BuildlID
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        description: Skip Sonar Build ?
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "NO"
+          - "YES"
+        value: "NO"
+      - type: xlrelease.StringVariable
+        key: SKIP_TEST_COVERAGE_BUILD
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "YES"
+          - "NO"
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_RAP_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_RCP_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: RCP_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_RCP_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GitBranch
+            description: Git Branch for Build
+            value: ${GitBranch}
+          - type: xlrelease.StringVariable
+            key: SKIP_SONAR_BUILD
+            value: ${SKIP_SONAR_BUILD}
+          - type: xlrelease.StringVariable
+            key: SKIP_TEST_COVERAGE_BUILD
+            value: ${SKIP_TEST_COVERAGE_BUILD}
+          createdReleaseId: ${BuildID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/RCP Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - Sprint
+          - Release_Candidate
+          - master
+          - 33.0.4_HF
+          - 34.0.1_HF
+          - 35.0.3_HF
+          - 40.0.3_HF
+          - 42.0.2_HF
+          - 45.0.2_HF
+          - 50.0.7_HF
+          - 53.0.10_HF
+          - 53.0.67_HF
+          - 54.0.1_HF
+          - 55.0.44_HF
+          - 60.0.57_HF
+          - ABS_V210
+          - 61.0.43_HF
+          - 62.0.35_HF
+          - MPDI-80240
+          - ABS_v210
+          - 63.0.25_HF
+          - 70.0.10_HF
+          - 71.0.15_HF
+          - 72.0.39_HF
+          - 73.0.44_HF
+          - 74.0.29_HF
+          - 75.0.24_HF
+          - 80.0.23_HF
+          - ABS_V220
+          - 81.0.13_HF
+          - 82.0.29_HF
+          - ABS_V221
+          - 84.0.41_HF
+          - 90.0.47_HF
+          - 91.0.12_HF
+      - type: xlrelease.StringVariable
+        key: BuildID
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        description: Skip Sonar Build ?
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "NO"
+          - "YES"
+        value: "NO"
+      - type: xlrelease.StringVariable
+        key: SKIP_TEST_COVERAGE_BUILD
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "YES"
+          - "NO"
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_RCP_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - template: ITMP_RSS_Build
+      scheduledStartDate: 2020-07-16T03:30:00Z
+      phases:
+      - phase: Build
+        tasks:
+        - name: RSS_Build
+          type: xlrelease.CreateReleaseTask
+          newReleaseTitle: ITMP_RSS_Build
+          templateVariables:
+          - type: xlrelease.StringVariable
+            key: GitBranch
+            description: Git Branch for Build
+            value: ${GitBranch}
+          createdReleaseId: ${BuildID}
+          riskProfile: Default risk profile
+          template: ITMP Global/Build/RSS Build
+          folder: ITMP Product/Build
+        - name: Wait for Completion
+          type: xlrelease.GateTask
+          dependencies:
+          - type: xlrelease.Dependency
+            targetId: ${BuildID}
+        color: '#0079BC'
+      variables:
+      - type: xlrelease.StringVariable
+        key: BuildID
+        requiresValue: false
+        showOnReleaseStart: false
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        description: Skip Sonar Build ?
+        valueProvider:
+          type: xlrelease.ListOfStringValueProviderConfiguration
+          values:
+          - "NO"
+          - "YES"
+        value: "NO"
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        value: ABS_V220
+      scriptUsername: admin
+      scriptUserPassword: !value "xlrelease_Release_ITMP_RSS_Build_scriptUserPassword"
+      riskProfile: Default risk profile
+    - name: Merge_Build
+      type: time.Schedule
+      releaseTitle: Merge_Build
+      variables:
+      - type: xlrelease.StringVariable
+        key: MergeID
+        requiresValue: false
+        showOnReleaseStart: false
+      template: ITMP_MERGE_PULLRQST_Build
+      periodicity: 0 0/30 * * * MON-FRI
+      enabled: false
+      triggerTime: 2020-11-23T07:00:00.551000
