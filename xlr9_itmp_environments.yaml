@@ -3,62 +3,63 @@ apiVersion: xl-release/v1
 kind: Environments
 spec:
   stages:
-  - TEST
-  - DEMO
+  - HOTFIX
+  - Production
   - PROD
   - DEV
-  - PERF
-  - DEV20
+  - TEST
   - COREUPGRADE
-  - MyStage
-  - HOTFIX2
-  - HOTFIX
-  - UPGRADE
   - INTAKE
   - PrePROD
+  - HOTFIX2
+  - DEMO
+  - DEV20
+  - Development
+  - UPGRADE
   - TEMP
+  - MyStage
+  - PERF
+  - Acceptance
   labels:
   - name: ITMP Tools
     color: '#65747c'
-  - name: OE-AGCS
+  - name: OE-Spain
     color: '#991c71'
-  - name: OE-Italy
+  - name: OE-Australia
     color: '#991c71'
   - name: AWS-E1
     color: '#00875a'
-  - name: OE-Australia
+  - name: XLR Testing
+    color: '#ffab00'
+  - name: OE-AGCS
     color: '#991c71'
-  - name: OE-Spain
+  - name: OE
     color: '#991c71'
   - name: ITMP Product
     color: '#0079bc'
-  - name: OE
+  - name: OE-Italy
     color: '#991c71'
-  - name: XLR Testing
-    color: '#ffab00'
   environments:
-  - name: COREUPGRADE
-    stage: COREUPGRADE
-  - name: Intake
-    stage: INTAKE
-  - name: UPGRADE
-    stage: UPGRADE
-    labels:
-    - ITMP Product
   - name: HOTFIX2
     stage: HOTFIX2
-    labels:
-    - ITMP Product
-  - name: DEV
-    stage: DEV
     labels:
     - ITMP Product
   - name: TEST
     stage: TEST
     labels:
     - ITMP Product
-  - name: DEV20
-    stage: DEV20
+  - name: DEV
+    stage: DEV
+    labels:
+    - ITMP Product
+  - name: Intake
+    stage: INTAKE
+  - name: HOTFIX
+    stage: HOTFIX
+    labels:
+    - ITMP Product
+  - name: UPGRADE
+    stage: UPGRADE
     labels:
     - ITMP Product
   - name: DEMO
@@ -67,7 +68,9 @@ spec:
     - ITMP Product
   - name: PERF
     stage: PERF
-  - name: HOTFIX
-    stage: HOTFIX
+  - name: DEV20
+    stage: DEV20
     labels:
     - ITMP Product
+  - name: COREUPGRADE
+    stage: COREUPGRADE

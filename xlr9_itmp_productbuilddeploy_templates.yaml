@@ -1,1699 +1,1333 @@
 ---
 apiVersion: xl-release/v1
 kind: Templates
+metadata:
+  home: ITMP Product/Build and Deploy
 spec:
-- directory: ITMP Product
-  children:
-  - directory: Build and Deploy
-    children:
-    - template: Airwave Build & Deploy
-      scheduledStartDate: 2021-08-09T03:30:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: Airwave Build
-          type: xlrelease.CreateReleaseTask
-          variableMapping:
-            templateVariables[0].value: ${SKIP_AIRWAVE_BUILD}
-            templateVariables[3].value: ${SKIP_FACADE_BUILD}
-          newReleaseTitle: Airwave Build
-          templateVariables:
-          - type: xlrelease.BooleanVariable
-            key: SKIP_AIRWAVE_BUILD
-            description: Check, if the airwave build need to be skipped. Provide AIRWAVE_VERSION,
-              if checked to consider for Docker image creation.
-          - type: xlrelease.StringVariable
-            key: AIRWAVE_ABS_GIT_BRANCH
-            inherited: true
-            value: master
-          - type: xlrelease.StringVariable
-            key: AIRWAVE_VERSION
-            requiresValue: false
-            description: Needed only when AIRWAVE_BUILD is SKIPPED. Else, consider
-              the normal version generation.
-            value: ${AIRWAVE_VERSION}
-          - type: xlrelease.BooleanVariable
-            key: SKIP_FACADE_BUILD
-            description: Check, if the facade build need to be skipped. Provide FACADE_VERSION,
-              if checked, to consider for Docker image creation.
-          - type: xlrelease.StringVariable
-            key: FACADE_ABS_GIT_BRANCH
-            requiresValue: false
-            description: Specify the ABS GIT branch from which FACADE build need to
-              be taken. Not Applicable if SKIP_FACADE_BUILD is checked
-            inherited: true
-            value: master
-          - type: xlrelease.StringVariable
-            key: FACADE_VERSION
-            requiresValue: false
-            description: Needed only when FACADE_BUILD is SKIPPED. Else, consider
-              the normal version generation.
-            value: ${FACADE_VERSION}
-          - type: xlrelease.StringVariable
-            key: SKIP_FACADE_TEST_COVERAGE_BUILD
-            inherited: true
-            value: "YES"
-          - type: xlrelease.StringVariable
-            key: SKIP_FACADE_SONAR_BUILD
-            inherited: true
-            value: "NO"
-          createdReleaseId: ${AirwaveBuildID}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/AIRWAVE Build
-          folder: ITMP Product/Build and Deploy
-        - name: Wait for Build Completion
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${AirwaveBuildID}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['AirwaveBuildID']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'FACADE_VERSION' in key:
-                    releaseVariables['FACADE_VERSION'] = myVariables[key]
-                    print(releaseVariables['FACADE_VERSION'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: Airwave Deploy
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: Airwave Deploy
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: FACADE_VERSION
-            description: Final Combined docker image version of Airwave + Facade
-            value: ${FACADE_VERSION}
-          - type: xlrelease.StringVariable
-            key: CLUSTER
-            inherited: true
-            value: aws-ec1
-          - type: xlrelease.StringVariable
-            key: OE
-            value: ${folder.OE}
-          - type: xlrelease.StringVariable
-            key: STAGE
-            value: ${STAGE}
-          - type: xlrelease.StringVariable
-            key: JiraDeploymentEpic
-            value: ${folder.JiraDeploymentEpic}
-          - type: xlrelease.StringVariable
-            key: JiraEpicLinkFieldId
-            value: ${folder.JiraEpicLinkFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraProjectKey
-            value: ${folder.JiraProjectKey}
-          - type: xlrelease.StringVariable
-            key: JiraAssignedTeamFieldId
-            value: ${folder.JiraAssignedTeamFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayerFieldId
-            value: ${folder.JiraImplementationLayerFieldId}
-          createdReleaseId: ${airwavedeployID}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy AIRWAVE global
-          folder: ITMP Product/Build and Deploy
-        - name: Wait for Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${airwavedeployID}
-        color: '#0079BC'
-      tags:
-      - deployments
-      variables:
+- template: CISL Build and Deploy DEMO
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: CISL Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Build
+      templateVariables:
       - type: xlrelease.StringVariable
-        key: AirwaveBuildID
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.BooleanVariable
-        key: SKIP_AIRWAVE_BUILD
-        description: Check, if the airwave build need to be skipped. Provide AIRWAVE_VERSION,
-          if checked to consider for Docker image creation.
-      - type: xlrelease.StringVariable
-        key: AIRWAVE_ABS_GIT_BRANCH
+        key: GitBranch
+        description: "Sprint, master, Release_Candidate"
         value: master
       - type: xlrelease.StringVariable
-        key: AIRWAVE_VERSION
-        requiresValue: false
-        description: Needed only when AIRWAVE_BUILD is SKIPPED. Else, consider the
-          normal version generation.
-      - type: xlrelease.BooleanVariable
-        key: SKIP_FACADE_BUILD
-        description: Check, if the facade build need to be skipped. Provide FACADE_VERSION,
-          if checked, to consider for Docker image creation.
+        key: SKIP_SONAR_BUILD
+        value: "${SKIP_SONAR_BUILD}"
       - type: xlrelease.StringVariable
-        key: FACADE_ABS_GIT_BRANCH
-        value: master
+        key: CONFIG_TYPE
+        inherited: true
       - type: xlrelease.StringVariable
-        key: FACADE_VERSION
-        requiresValue: false
+        key: SKIP_TEST_COVERAGE_BUILD
+        inherited: true
       - type: xlrelease.StringVariable
-        key: STAGE
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - dev
-          - test
-          - demo
-      - type: xlrelease.StringVariable
-        key: airwavedeployID
-        requiresValue: false
-        showOnReleaseStart: false
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_Airwave_Build___Deploy_scriptUserPassword"
+        key: DEPLOY_AFTER_BUILD
+        value: "YES"
+      createdReleaseId: "${CISLDailyBuildReleaseId}"
       riskProfile: Default risk profile
-    - template: Airwave Deploy
-      scheduledStartDate: 2021-08-09T03:30:00Z
-      phases:
-      - phase: Deploy
-        tasks:
-        - name: Airwave Deploy
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: Airwave Deploy
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: FACADE_VERSION
-            description: Final Combined docker image version of Airwave + Facade
-            value: ${FACADE_VERSION}
-          - type: xlrelease.StringVariable
-            key: CLUSTER
-            inherited: true
-            value: aws-ec1
-          - type: xlrelease.StringVariable
-            key: OE
-            value: ${folder.OE}
-          - type: xlrelease.StringVariable
-            key: STAGE
-            value: ${STAGE}
-          - type: xlrelease.StringVariable
-            key: JiraDeploymentEpic
-            value: ${folder.JiraDeploymentEpic}
-          - type: xlrelease.StringVariable
-            key: JiraEpicLinkFieldId
-            value: ${folder.JiraEpicLinkFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraProjectKey
-            value: ${folder.JiraProjectKey}
-          - type: xlrelease.StringVariable
-            key: JiraAssignedTeamFieldId
-            value: ${folder.JiraAssignedTeamFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayerFieldId
-            value: ${folder.JiraImplementationLayerFieldId}
-          createdReleaseId: ${airwavedeployID}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy AIRWAVE global
-          folder: ITMP Product/Build and Deploy
-        - name: Wait for Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${airwavedeployID}
-        color: '#0079BC'
-      tags:
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: AirwaveBuildID
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: AIRWAVE_ABS_GIT_BRANCH
-        showOnReleaseStart: false
-        value: master
-      - type: xlrelease.StringVariable
-        key: FACADE_ABS_GIT_BRANCH
-        showOnReleaseStart: false
-        value: master
-      - type: xlrelease.StringVariable
-        key: FACADE_VERSION
-      - type: xlrelease.StringVariable
-        key: STAGE
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - dev
-          - test
-          - demo
-      - type: xlrelease.StringVariable
-        key: airwavedeployID
-        requiresValue: false
-        showOnReleaseStart: false
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_Airwave_Deploy_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: Build & Deploy PS
-      scheduledStartDate: 2020-05-11T07:00:00Z
-      phases:
-      - phase: Deploy ${app}
-        tasks:
-        - name: Set target environment from Environment Selection
-          type: xlrelease.ScriptTask
-          script: releaseVariables['environment'] = environmentApi.getById(releaseVariables['environmentSelect']).title
-        - name: Deploy and check
-          type: xlrelease.SequentialGroup
-          tasks:
-          - name: Map ENV to OE and STAGE
-            type: xlrelease.ScriptTask
-            script: |-
-              responseoe = releaseVariables['environment'].split()[0]
-              releaseVariables['OE'] = ${global.OEMAP}[responseoe]
-              releaseVariables['STAGE'] = releaseVariables['environment'].split()[1]
-              releaseVariables['STAGE'] = releaseVariables['STAGE'].lower()
+      template: ITMP Global/Build/CISL Build
+      folder: ITMP Global/Build
+    - name: Wait for CISL Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['CISLDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
 
-              #variables needed for dynamic isAlive:
-              releaseVariables['CLUSTERDOMAIN'] = releaseVariables['CLUSTER'].split('-')[1] + "." + releaseVariables['CLUSTER'].split('-')[0]
-              if releaseVariables['OE'] == "it-master-platform":
-                  releaseVariables['OEPREFIX'] = ''
-              else:
-                  releaseVariables['OEPREFIX'] = 'itmp-'
-          - name: Deploy ${app}
-            type: jenkins.Build
-            jenkinsServer: Service Owner Jenkins global
-            jobName: ITMP-Frontend/job/policy-admin/job/policy-search
-            jobParameters: |-
-              GIT_BRANCH=${gitbranch}
-              NAMESPACE=${OE}-${STAGE}
-            taskRecoverOp: SKIP_TASK
-        color: '#0079BC'
-      variables:
+        for key in myVariables:
+            if 'CISLBuildVersion' in key:
+                releaseVariables['CISLVersion'] = myVariables[key]
+                print(releaseVariables['CISLVersion'])
+    - name: abc
+      type: servicenow.CreateChangeRequest
+    - name: ch
+      type: servicenow.CheckChangeRequest
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: CISL Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Deployment
+      templateVariables:
       - type: xlrelease.StringVariable
-        key: environment
-        showOnReleaseStart: false
+        key: CISLVersion
+        requiresValue: false
+        value: "${CISLVersion}"
       - type: xlrelease.StringVariable
         key: environmentSelect
-        valueProvider:
-          type: xlrelease.EnvironmentValueProvider
+        value: Configuration/environmentManagement/Environment1c5267e5b2d143d2b058bb4d2f524b2c
+      createdReleaseId: "${CISLDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Product/Deploy/Frontend/Deploy CISL Product
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for CISL Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: CISLDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: master
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: CISL Build and Deploy DEV
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: CISL Daily Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Daily Build
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        description: "Sprint, master, Release_Candidate"
+        value: "${GitBranch}"
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        value: "${SONAR_BUILD}"
+      - type: xlrelease.StringVariable
+        key: CONFIG_TYPE
+        value: properties
+      - type: xlrelease.StringVariable
+        key: SKIP_TEST_COVERAGE_BUILD
+        value: "${SKIP_TEST_COVERAGE_BUILD}"
+      createdReleaseId: "${CISLDailyBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/CISL Build
+      folder: ITMP Global/Build
+    - name: Wait for CISL Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['CISLDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'CISLBuildVersion' in key:
+                releaseVariables['CISLVersion'] = myVariables[key]
+                print(releaseVariables['CISLVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: CISL Daily Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Daily Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: CISLVersion
+        description: You will need to provide both BFF anf FE version - this is a
+          jenkins pipeline restriction
+        value: "${CISLVersion}"
+      - type: xlrelease.StringVariable
+        key: STAGE
+        inherited: true
+      - type: xlrelease.StringVariable
+        key: environmentSelect
+        value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
+      - type: xlrelease.StringVariable
+        key: CONFIG_TYPE
+        description: select --> properties for 20.5 ; reg for 20.0
+        inherited: true
+        value: properties
+      createdReleaseId: "${CISLDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      template: Testing/Old Product Templates/Deploy CISL Product
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for CISL Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: CISLDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: master
+  - type: xlrelease.StringVariable
+    key: SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: SKIP_TEST_COVERAGE_BUILD
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
+- template: CISL Build and Deploy DEV20
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: CISL Daily Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Daily Build
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        description: "Sprint, master, Release_Candidate"
+        value: "${GitBranch}"
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        value: "${SKIP_SONAR_BUILD}"
+      createdReleaseId: "${CISLDailyBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/CISL Build
+      folder: ITMP Global/Build
+    - name: Wait for CISL Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['CISLDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'CISLBuildVersion' in key:
+                releaseVariables['CISLVersion'] = myVariables[key]
+                print(releaseVariables['CISLVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: CISL Daily Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Daily Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: CISLVersion
+        requiresValue: false
+        value: "${CISLVersion}"
+      - type: xlrelease.StringVariable
+        key: CLUSTER
+        inherited: true
+        value: aws-ec1
+      - type: xlrelease.StringVariable
+        key: environmentSelect
+        value: Configuration/environmentManagement/Environment8a6e9680b37243bfa9a5d61fa243c0fc
+      createdReleaseId: "${CISLDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      folder: ITMP Global/Deploy
+    - name: Wait for CISL Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: CISLDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: Upgrade
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: CISL Build and Deploy HOTFIX
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: CISL Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Build
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: GitBranch
+        description: "Sprint, master, Release_Candidate"
+        value: "${GitBranch}"
+      - type: xlrelease.StringVariable
+        key: SKIP_SONAR_BUILD
+        value: "${SKIP_SONAR_BUILD}"
+      createdReleaseId: "${CISLDailyBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/CISL Build
+      folder: ITMP Global/Build
+    - name: Wait for CISL Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['CISLDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'CISLBuildVersion' in key:
+                releaseVariables['CISLVersion'] = myVariables[key]
+                print(releaseVariables['CISLVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: CISL Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: CISL Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: CISLVersion
+        requiresValue: false
+        value: "${CISLVersion}"
+      - type: xlrelease.StringVariable
+        key: CLUSTER
+        inherited: true
+        value: aws-ec1
+      - type: xlrelease.StringVariable
+        key: environmentSelect
+        value: Configuration/environmentManagement/Environmentfd4cc5e9a41544d09848f880c6d5f844
+      createdReleaseId: "${CISLDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      folder: ITMP Global/Deploy
+    - name: Wait for CISL Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${CISLDailyDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: CISLDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: CISLDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+  - type: xlrelease.StringVariable
+    key: GIT_ABS_BRANCH
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: Midcorp-uwwb-fe Build & Deploy DEV
+  scheduledStartDate: 2021-04-21T03:30:00Z
+  dueDate: 2021-04-21T04:30:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: Midcorp-uwwb-fe bundle build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: Midcorp-uwwb-fe bundle build
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: GIT_BRANCH
+        value: "${GIT_BRANCH}"
+      createdReleaseId: "${uwwbfebuildID}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/MIDCORP-FE Bundle
+      folder: ITMP Product/Build and Deploy
+    - name: Wait for completion
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${uwwbfebuildID}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['uwwbfebuildID']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'midcorpfeBundleVersion' in key:
+                releaseVariables['uwwbfeVersion'] = myVariables[key]
+                print(releaseVariables['uwwbfeVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: Midcorp-uwwb-fe Deploy
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: Midcorp-uwwb-fe Deploy
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: INF
+        value: "${INF}"
+      - type: xlrelease.StringVariable
+        key: Version
+        value: "${uwwbfeVersion}"
+      - type: xlrelease.StringVariable
+        key: JiraAssignedTeamFieldId
+        value: "${folder.JiraAssignedTeamFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraImplementationLayerFieldId
+        value: "${folder.JiraImplementationLayerFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraProjectKey
+        value: "${folder.JiraProjectKey}"
+      - type: xlrelease.StringVariable
+        key: OE
+        value: "${folder.OE}"
+      - type: xlrelease.StringVariable
+        key: STAGE
+        value: dev
+      - type: xlrelease.StringVariable
+        key: JiraDeploymentEpic
+        value: MPDI-8465
+      - type: xlrelease.StringVariable
+        key: JiraEpicLinkFieldId
+        value: "${folder.JiraEpicLinkFieldId}"
       - type: xlrelease.StringVariable
         key: CLUSTER
         value: aws-ec1
       - type: xlrelease.StringVariable
+        key: AUTO_APPLY
+        value: "${AUTO_APPLY}"
+      createdReleaseId: "${uwwbfedeployID}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Deploy/Deploy midcorp-uwwb global
+      folder: ITMP Product/Build and Deploy
+    - name: Wait for completion
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${uwwbfedeployID}"
+    color: '#0079BC'
+  variables:
+  - type: xlrelease.StringVariable
+    key: uwwbfebuildID
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GIT_BRANCH
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - develop
+      - migrationDevelop
+    value: migrationDevelop
+  - type: xlrelease.StringVariable
+    key: INF
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - fe
+      - bff
+  - type: xlrelease.StringVariable
+    key: uwwbfedeployID
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: uwwbfeVersion
+    showOnReleaseStart: false
+  - type: xlrelease.BooleanVariable
+    key: AUTO_APPLY
+    description: Auto Apply container environment
+    value: true
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
+- template: PAT-BFF Build and Deploy
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: PAT-BFF Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: PAT-BFF Build
+      createdReleaseId: "${PATBFFBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/PAT-BFF Build
+      folder: ITMP Global/Build
+    - name: Wait for PAT-BFF Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${PATBFFBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['PATBFFBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'patbffBuildVersion' in key:
+                releaseVariables['VERSION'] = myVariables[key]
+                print(releaseVariables['VERSION'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: PAT-BFF Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: PAT-BFF Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: JiraAssignedTeamFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraAssignedTeamFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraImplementationLayerFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraImplementationLayerFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraProjectKey
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraProjectKey}"
+      - type: xlrelease.StringVariable
+        key: JiraDeploymentEpic
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraDeploymentEpic}"
+      - type: xlrelease.StringVariable
+        key: JiraEpicLinkFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraEpicLinkFieldId}"
+      - type: xlrelease.StringVariable
+        key: jiraAssignedTeam
+        description: Team in Jira to which this ticket needs to be assigned to
+        value: "${folder.jiraAssignedTeam}"
+      - type: xlrelease.StringVariable
+        key: JiraImplementationLayer
+        description: Implementation Layer (corresponding Jira values)
+        value: "${folder.JiraImplementationLayer}"
+      - type: xlrelease.StringVariable
+        key: VERSION
+        value: "${VERSION}"
+      - type: xlrelease.StringVariable
         key: OE
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CLUSTERDOMAIN
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: OEPREFIX
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: STAGE
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: app
-      - type: xlrelease.StringVariable
-        key: gitbranch
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_Build___Deploy_PS_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: CISL Build and Deploy DEMO
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: CISL Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Sprint, master, Release_Candidate
-            value: master
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          createdReleaseId: ${CISLDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/CISL Build
-          folder: ITMP Global/Build
-        - name: Wait for CISL Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['CISLDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'CISLBuildVersion' in key:
-                    releaseVariables['CISLVersion'] = myVariables[key]
-                    print(releaseVariables['CISLVersion'])
-        - name: abc
-          type: servicenow.CreateChangeRequest
-        - name: ch
-          type: servicenow.CheckChangeRequest
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: CISL Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLVersion
-            requiresValue: false
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environment1c5267e5b2d143d2b058bb4d2f524b2c
-          createdReleaseId: ${CISLDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy CISL Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for CISL Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: CISLDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
-      - type: xlrelease.StringVariable
-        key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_CISL_Build_and_Deploy_DEMO_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: CISL Build and Deploy DEV
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: CISL Daily Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Sprint, master, Release_Candidate
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SONAR_BUILD}
-          - type: xlrelease.StringVariable
-            key: CONFIG_TYPE
-            value: properties
-          - type: xlrelease.StringVariable
-            key: SKIP_TEST_COVERAGE_BUILD
-            value: ${SKIP_TEST_COVERAGE_BUILD}
-          createdReleaseId: ${CISLDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/CISL Build
-          folder: ITMP Global/Build
-        - name: Wait for CISL Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['CISLDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'CISLBuildVersion' in key:
-                    releaseVariables['CISLVersion'] = myVariables[key]
-                    print(releaseVariables['CISLVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: CISL Daily Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLVersion
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
-          - type: xlrelease.BooleanVariable
-            key: test
-            requiresValue: false
-            description: Check to trigger corresponding tests
-            value: true
-          - type: xlrelease.StringVariable
-            key: CONFIG_TYPE
-            description: select --> properties for 20.5 ; reg for 20.0
-            inherited: true
-            value: properties
-          createdReleaseId: ${CISLDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy CISL Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for CISL Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: CISLDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
-      - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      - type: xlrelease.StringVariable
-        key: SKIP_TEST_COVERAGE_BUILD
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_CISL_Build_and_Deploy_DEV_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: CISL Build and Deploy DEV20
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: CISL Daily Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Sprint, master, Release_Candidate
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          createdReleaseId: ${CISLDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/CISL Build
-          folder: ITMP Global/Build
-        - name: Wait for CISL Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['CISLDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'CISLBuildVersion' in key:
-                    releaseVariables['CISLVersion'] = myVariables[key]
-                    print(releaseVariables['CISLVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: CISL Daily Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLVersion
-            requiresValue: false
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: CLUSTER
-            inherited: true
-            value: aws-ec1
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environment8a6e9680b37243bfa9a5d61fa243c0fc
-          createdReleaseId: ${CISLDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy CISL global (old)
-          folder: ITMP Global/Deploy
-        - name: Wait for CISL Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: CISLDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: Upgrade
-      - type: xlrelease.StringVariable
-        key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_CISL_Build_and_Deploy_DEV20_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: CISL Build and Deploy HOTFIX
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: CISL Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Sprint, master, Release_Candidate
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          createdReleaseId: ${CISLDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/CISL Build
-          folder: ITMP Global/Build
-        - name: Wait for CISL Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['CISLDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'CISLBuildVersion' in key:
-                    releaseVariables['CISLVersion'] = myVariables[key]
-                    print(releaseVariables['CISLVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: CISL Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLVersion
-            requiresValue: false
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: CLUSTER
-            inherited: true
-            value: aws-ec1
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environmentfd4cc5e9a41544d09848f880c6d5f844
-          createdReleaseId: ${CISLDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy CISL global (old)
-          folder: ITMP Global/Deploy
-        - name: Wait for CISL Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: CISLDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-      - type: xlrelease.StringVariable
-        key: GIT_ABS_BRANCH
-      - type: xlrelease.StringVariable
-        key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_CISL_Build_and_Deploy_HOTFIX_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: CISL Build Docker Image and Deploy PERF
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: CISL Daily Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLBuildVersion
-            description: Version of CISL war file
-            inherited: true
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Sprint, master, Release_Candidate
-            value: ${GitBranch}
-          createdReleaseId: ${CISLDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/CISL Docker Image Build
-          folder: ITMP Global/Build
-        - name: Wait for CISL Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['CISLDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'CISLBuildVersion' in key:
-                    releaseVariables['CISLVersion'] = myVariables[key]
-                    print(releaseVariables['CISLVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: CISL Daily Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: CISL Daily Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: CISLVersion
-            value: ${CISLVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environment0cf3b3b42c0f467ba870eea5614f613e
-          - type: xlrelease.BooleanVariable
-            key: test
-            requiresValue: false
-            description: Check to trigger corresponding tests
-            value: true
-          - type: xlrelease.StringVariable
-            key: CONFIG_TYPE
-            description: select --> properties for 20.5 ; reg for 20.0
-            inherited: true
-            value: properties
-          createdReleaseId: ${CISLDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy CISL Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for CISL Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${CISLDailyDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: CISLDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: CISLVersion
-      - type: xlrelease.StringVariable
-        key: CISLDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: 82.0.29_HF
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_CISL_Build_Docker_Image_and_Deploy_PERF_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: Midcorp-uwwb-fe Build & Deploy DEV
-      scheduledStartDate: 2021-04-21T03:30:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: Midcorp-uwwb-fe bundle build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: Midcorp-uwwb-fe bundle build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GIT_BRANCH
-            value: ${GIT_BRANCH}
-          createdReleaseId: ${uwwbfebuildID}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/MIDCORP-FE Bundle
-          folder: ITMP Product/Build and Deploy
-        - name: Wait for completion
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${uwwbfebuildID}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['uwwbfebuildID']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'midcorpfeBundleVersion' in key:
-                    releaseVariables['uwwbfeVersion'] = myVariables[key]
-                    print(releaseVariables['uwwbfeVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: Midcorp-uwwb-fe Deploy
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: Midcorp-uwwb-fe Deploy
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: INF
-            value: ${INF}
-          - type: xlrelease.StringVariable
-            key: Version
-            value: ${uwwbfeVersion}
-          - type: xlrelease.StringVariable
-            key: JiraAssignedTeamFieldId
-            value: ${folder.JiraAssignedTeamFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayerFieldId
-            value: ${folder.JiraImplementationLayerFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraProjectKey
-            value: ${folder.JiraProjectKey}
-          - type: xlrelease.StringVariable
-            key: OE
-            value: ${folder.OE}
-          - type: xlrelease.StringVariable
-            key: STAGE
-            value: dev
-          - type: xlrelease.StringVariable
-            key: JiraDeploymentEpic
-            value: MPDI-8465
-          - type: xlrelease.StringVariable
-            key: JiraEpicLinkFieldId
-            value: ${folder.JiraEpicLinkFieldId}
-          - type: xlrelease.StringVariable
-            key: CLUSTER
-            value: aws-ec1
-          - type: xlrelease.StringVariable
-            key: AUTO_APPLY
-            value: ${AUTO_APPLY}
-          createdReleaseId: ${uwwbfedeployID}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy midcorp-uwwb global
-          folder: ITMP Product/Build and Deploy
-        - name: Wait for completion
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${uwwbfedeployID}
-        color: '#0079BC'
-      variables:
-      - type: xlrelease.StringVariable
-        key: uwwbfebuildID
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GIT_BRANCH
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - develop
-          - migrationDevelop
-        value: migrationDevelop
+        value: "${folder.OE}"
       - type: xlrelease.StringVariable
         key: INF
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - fe
-          - bff
+        value: "${INF}"
       - type: xlrelease.StringVariable
-        key: uwwbfedeployID
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: uwwbfeVersion
-        showOnReleaseStart: false
-      - type: xlrelease.BooleanVariable
         key: AUTO_APPLY
-        description: Auto Apply container environment
-        value: true
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_Midcorp_uwwb_fe_Build___Deploy_DEV_scriptUserPassword"
+        value: "${AUTO_APPLY}"
+      createdReleaseId: "${patbffDeploymentReleaseId}"
       riskProfile: Default risk profile
-    - template: PAT-BFF Build and Deploy
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: PAT-BFF Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: PAT-BFF Build
-          createdReleaseId: ${PATBFFBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/PAT-BFF Build
-          folder: ITMP Global/Build
-        - name: Wait for PAT-BFF Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${PATBFFBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['PATBFFBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
+      template: ITMP Global/Deploy/Deploy PAT global
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for PAT-BFF Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${patbffDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: VERSION
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: INF
+    showOnReleaseStart: false
+    value: bff
+  - type: xlrelease.BooleanVariable
+    key: AUTO_APPLY
+    value: true
+  - type: xlrelease.StringVariable
+    key: PATBFFBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: patbffDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
+- template: PAT-FE Build and Deploy
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: PAT-FE Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: PAT Build
+      createdReleaseId: "${PATFEBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/PAT-FE Build
+      folder: ITMP Global/Build
+    - name: Wait for PAT-FE Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${PATFEBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['PATFEBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
 
-            for key in myVariables:
-                if 'patbffBuildVersion' in key:
-                    releaseVariables['VERSION'] = myVariables[key]
-                    print(releaseVariables['VERSION'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: PAT-BFF Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: PAT-BFF Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: JiraAssignedTeamFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraAssignedTeamFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayerFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraImplementationLayerFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraProjectKey
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraProjectKey}
-          - type: xlrelease.StringVariable
-            key: JiraDeploymentEpic
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraDeploymentEpic}
-          - type: xlrelease.StringVariable
-            key: JiraEpicLinkFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraEpicLinkFieldId}
-          - type: xlrelease.StringVariable
-            key: jiraAssignedTeam
-            description: Team in Jira to which this ticket needs to be assigned to
-            value: ${folder.jiraAssignedTeam}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayer
-            description: Implementation Layer (corresponding Jira values)
-            value: ${folder.JiraImplementationLayer}
-          - type: xlrelease.StringVariable
-            key: VERSION
-            value: ${VERSION}
-          - type: xlrelease.StringVariable
-            key: OE
-            value: ${folder.OE}
-          - type: xlrelease.StringVariable
-            key: INF
-            value: ${INF}
-          - type: xlrelease.StringVariable
-            key: AUTO_APPLY
-            value: ${AUTO_APPLY}
-          createdReleaseId: ${patbffDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy PAT global
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for PAT-BFF Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${patbffDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
+        for key in myVariables:
+            if 'patfeBuildVersion' in key:
+                releaseVariables['VERSION'] = myVariables[key]
+                print(releaseVariables['VERSION'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: PAT-FE Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: PAT-FE Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: JiraAssignedTeamFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraAssignedTeamFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraImplementationLayerFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraImplementationLayerFieldId}"
+      - type: xlrelease.StringVariable
+        key: JiraProjectKey
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraProjectKey}"
+      - type: xlrelease.StringVariable
+        key: JiraDeploymentEpic
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraDeploymentEpic}"
+      - type: xlrelease.StringVariable
+        key: JiraEpicLinkFieldId
+        description: Value should come from a predefined folder variable
+        value: "${folder.JiraEpicLinkFieldId}"
+      - type: xlrelease.StringVariable
+        key: jiraAssignedTeam
+        description: Team in Jira to which this ticket needs to be assigned to
+        value: "${folder.jiraAssignedTeam}"
+      - type: xlrelease.StringVariable
+        key: JiraImplementationLayer
+        description: Implementation Layer (corresponding Jira values)
+        value: "${folder.JiraImplementationLayer}"
       - type: xlrelease.StringVariable
         key: VERSION
-        showOnReleaseStart: false
+        value: "${VERSION}"
+      - type: xlrelease.StringVariable
+        key: OE
+        value: "${folder.OE}"
       - type: xlrelease.StringVariable
         key: INF
-        showOnReleaseStart: false
-        value: bff
-      - type: xlrelease.BooleanVariable
+        value: "${INF}"
+      - type: xlrelease.StringVariable
         key: AUTO_APPLY
-        value: true
-      - type: xlrelease.StringVariable
-        key: PATBFFBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: patbffDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_PAT_BFF_Build_and_Deploy_scriptUserPassword"
+        value: "${AUTO_APPLY}"
+      createdReleaseId: "${patfeDeploymentReleaseId}"
       riskProfile: Default risk profile
-    - template: PAT-FE Build and Deploy
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: PAT-FE Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: PAT Build
-          createdReleaseId: ${PATFEBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/PAT-FE Build
-          folder: ITMP Global/Build
-        - name: Wait for PAT-FE Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${PATFEBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['PATFEBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'patfeBuildVersion' in key:
-                    releaseVariables['VERSION'] = myVariables[key]
-                    print(releaseVariables['VERSION'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: PAT-FE Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: PAT-FE Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: JiraAssignedTeamFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraAssignedTeamFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayerFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraImplementationLayerFieldId}
-          - type: xlrelease.StringVariable
-            key: JiraProjectKey
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraProjectKey}
-          - type: xlrelease.StringVariable
-            key: JiraDeploymentEpic
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraDeploymentEpic}
-          - type: xlrelease.StringVariable
-            key: JiraEpicLinkFieldId
-            description: Value should come from a predefined folder variable
-            value: ${folder.JiraEpicLinkFieldId}
-          - type: xlrelease.StringVariable
-            key: jiraAssignedTeam
-            description: Team in Jira to which this ticket needs to be assigned to
-            value: ${folder.jiraAssignedTeam}
-          - type: xlrelease.StringVariable
-            key: JiraImplementationLayer
-            description: Implementation Layer (corresponding Jira values)
-            value: ${folder.JiraImplementationLayer}
-          - type: xlrelease.StringVariable
-            key: VERSION
-            value: ${VERSION}
-          - type: xlrelease.StringVariable
-            key: OE
-            value: ${folder.OE}
-          - type: xlrelease.StringVariable
-            key: INF
-            value: ${INF}
-          - type: xlrelease.StringVariable
-            key: AUTO_APPLY
-            value: ${AUTO_APPLY}
-          createdReleaseId: ${patfeDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy PAT global
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for PAT-FE Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${patfeDeploymentReleaseId}
-        color: '#FFAB00'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: PATFEBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: patfeDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: VERSION
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: INF
-        showOnReleaseStart: false
-        value: fe
-      - type: xlrelease.BooleanVariable
-        key: AUTO_APPLY
-        value: true
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_PAT_FE_Build_and_Deploy_scriptUserPassword"
-      riskProfile: Default risk profile
-    - template: RAP Build and Deploy DEMO
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: RAP Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Git Branch for Build
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          - type: xlrelease.StringVariable
-            key: SKIP_TEST_COVERAGE_BUILD
-            value: ${SKIP_TEST_COVERAGE_BUILD}
-          createdReleaseId: ${RAPDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/RAP Build
-          folder: ITMP Global/Build
-        - name: Wait for RAP Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['RAPDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'RAPBuildVersion' in key:
-                    releaseVariables['RAPVersion'] = myVariables[key]
-                    print(releaseVariables['RAPVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: RAP Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: RAPVersion
-            requiresValue: false
-            value: ${RAPVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            requiresValue: false
-            value: Configuration/environmentManagement/Environment1c5267e5b2d143d2b058bb4d2f524b2c
-          - type: xlrelease.StringVariable
-            key: CONFIG_TYPE
-            description: select --> properties for 20.5 ; reg for 20.0
-            value: properties
-          createdReleaseId: ${RAPDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy RAP Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for RAP Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyDeploymentReleaseId}
-        color: '#0079BC'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: RAPDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: RAPVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: RAPDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
+      template: ITMP Global/Deploy/Deploy PAT global
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for PAT-FE Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${patfeDeploymentReleaseId}"
+    color: '#FFAB00'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: PATFEBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: patfeDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: VERSION
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: INF
+    showOnReleaseStart: false
+    value: fe
+  - type: xlrelease.BooleanVariable
+    key: AUTO_APPLY
+    value: true
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
+- template: RAP Build and Deploy DEMO
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: RAP Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Build
+      templateVariables:
       - type: xlrelease.StringVariable
         key: GitBranch
-        value: master
+        description: Git Branch for Build
+        value: "${GitBranch}"
       - type: xlrelease.StringVariable
         key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
+        value: "${SKIP_SONAR_BUILD}"
       - type: xlrelease.StringVariable
         key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_RAP_Build_and_Deploy_DEMO_scriptUserPassword"
+        value: "${SKIP_TEST_COVERAGE_BUILD}"
+      createdReleaseId: "${RAPDailyBuildReleaseId}"
       riskProfile: Default risk profile
-    - template: RAP Build and Deploy DEV
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: RAP Daily Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Daily Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Git Branch for Build
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SONAR_BUILD}
-          - type: xlrelease.StringVariable
-            key: SKIP_TEST_COVERAGE_BUILD
-            value: ${SKIP_TEST_COVERAGE_BUILD}
-          createdReleaseId: ${RAPDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/RAP Build
-          folder: ITMP Global/Build
-        - name: Wait for RAP Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['RAPDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
+      template: ITMP Global/Build/RAP Build
+      folder: ITMP Global/Build
+    - name: Wait for RAP Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['RAPDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
 
-            for key in myVariables:
-                if 'RAPBuildVersion' in key:
-                    releaseVariables['RAPVersion'] = myVariables[key]
-                    print(releaseVariables['RAPVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: RAP Daily Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Daily Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: RAPVersion
-            value: ${RAPVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
-          - type: xlrelease.StringVariable
-            key: CONFIG_TYPE
-            description: select --> properties for 20.5 ; reg for 20.0
-            value: properties
-          createdReleaseId: ${RAPDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy RAP Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for RAP Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyDeploymentReleaseId}
-        color: '#0079BC'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: RAPDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
+        for key in myVariables:
+            if 'RAPBuildVersion' in key:
+                releaseVariables['RAPVersion'] = myVariables[key]
+                print(releaseVariables['RAPVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: RAP Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Deployment
+      templateVariables:
       - type: xlrelease.StringVariable
         key: RAPVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: RAPDailyDeploymentReleaseId
         requiresValue: false
-        showOnReleaseStart: false
+        value: "${RAPVersion}"
       - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
+        key: environmentSelect
+        requiresValue: false
+        value: Configuration/environmentManagement/Environment1c5267e5b2d143d2b058bb4d2f524b2c
       - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      - type: xlrelease.StringVariable
-        key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_RAP_Build_and_Deploy_DEV_scriptUserPassword"
+        key: CONFIG_TYPE
+        description: select --> properties for 20.5 ; reg for 20.0
+        value: properties
+      createdReleaseId: "${RAPDailyDeploymentReleaseId}"
       riskProfile: Default risk profile
-    - template: RAP Build and Deploy DEV20
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: RAP Daily Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Daily Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Git Branch for Build
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          - type: xlrelease.StringVariable
-            key: SKIP_TEST_COVERAGE_BUILD
-            value: ${SKIP_TEST_COVERAGE_BUILD}
-          createdReleaseId: ${RAPDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/RAP Build
-          folder: ITMP Global/Build
-        - name: Wait for RAP Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['RAPDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
-
-            for key in myVariables:
-                if 'RAPBuildVersion' in key:
-                    releaseVariables['RAPVersion'] = myVariables[key]
-                    print(releaseVariables['RAPVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: RAP Daily Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Daily Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: RAPVersion
-            requiresValue: false
-            value: ${RAPVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            requiresValue: false
-            value: Configuration/environmentManagement/Environment8a6e9680b37243bfa9a5d61fa243c0fc
-          createdReleaseId: ${RAPDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy RAP global (old)
-          folder: ITMP Global/Deploy
-        - name: Wait for RAP Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyDeploymentReleaseId}
-        color: '#0079BC'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: RAPDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: RAPVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: RAPDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
+      template: ITMP Product/Deploy/Frontend/Deploy RAP Product
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for RAP Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyDeploymentReleaseId}"
+    color: '#0079BC'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: RAPDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: master
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: SKIP_TEST_COVERAGE_BUILD
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: RAP Build and Deploy DEV
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: RAP Daily Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Daily Build
+      templateVariables:
       - type: xlrelease.StringVariable
         key: GitBranch
-        value: Upgrade
+        description: Git Branch for Build
+        value: "${GitBranch}"
       - type: xlrelease.StringVariable
         key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
+        value: "${SONAR_BUILD}"
       - type: xlrelease.StringVariable
         key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_RAP_Build_and_Deploy_DEV20_scriptUserPassword"
+        value: "${SKIP_TEST_COVERAGE_BUILD}"
+      createdReleaseId: "${RAPDailyBuildReleaseId}"
       riskProfile: Default risk profile
-    - template: RAP Build and Deploy HOTFIX
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: RAP Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Git Branch for Build
-            value: ${GitBranch}
-          - type: xlrelease.StringVariable
-            key: SKIP_SONAR_BUILD
-            value: ${SKIP_SONAR_BUILD}
-          - type: xlrelease.StringVariable
-            key: SKIP_TEST_COVERAGE_BUILD
-            value: ${SKIP_TEST_COVERAGE_BUILD}
-          createdReleaseId: ${RAPDailyBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/RAP Build
-          folder: ITMP Global/Build
-        - name: Wait for RAP Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['RAPDailyBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
+      template: ITMP Global/Build/RAP Build
+      folder: ITMP Global/Build
+    - name: Wait for RAP Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['RAPDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
 
-            for key in myVariables:
-                if 'RAPBuildVersion' in key:
-                    releaseVariables['RAPVersion'] = myVariables[key]
-                    print(releaseVariables['RAPVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: RAP Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RAP Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: RAPVersion
-            requiresValue: false
-            value: ${RAPVersion}
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            requiresValue: false
-            value: Configuration/environmentManagement/Environmentfd4cc5e9a41544d09848f880c6d5f844
-          createdReleaseId: ${RAPDailyDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Deploy/Deploy RAP global (old)
-          folder: ITMP Global/Deploy
-        - name: Wait for RAP Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RAPDailyDeploymentReleaseId}
-        color: '#0079BC'
-      tags:
-      - builds
-      - deployments
-      variables:
-      - type: xlrelease.StringVariable
-        key: RAPDailyBuildReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
+        for key in myVariables:
+            if 'RAPBuildVersion' in key:
+                releaseVariables['RAPVersion'] = myVariables[key]
+                print(releaseVariables['RAPVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: RAP Daily Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Daily Deployment
+      templateVariables:
       - type: xlrelease.StringVariable
         key: RAPVersion
-        showOnReleaseStart: false
+        value: "${RAPVersion}"
       - type: xlrelease.StringVariable
-        key: RAPDailyDeploymentReleaseId
-        requiresValue: false
-        showOnReleaseStart: false
+        key: environmentSelect
+        value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
+      - type: xlrelease.StringVariable
+        key: CONFIG_TYPE
+        description: select --> properties for 20.5 ; reg for 20.0
+        value: properties
+      createdReleaseId: "${RAPDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Product/Deploy/Frontend/Deploy RAP Product
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for RAP Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyDeploymentReleaseId}"
+    color: '#0079BC'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: RAPDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: master
+  - type: xlrelease.StringVariable
+    key: SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: SKIP_TEST_COVERAGE_BUILD
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
+- template: RAP Build and Deploy DEV20
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: RAP Daily Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Daily Build
+      templateVariables:
       - type: xlrelease.StringVariable
         key: GitBranch
-      - type: xlrelease.StringVariable
-        key: GIT_ABS_BRANCH
+        description: Git Branch for Build
+        value: "${GitBranch}"
       - type: xlrelease.StringVariable
         key: SKIP_SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
+        value: "${SKIP_SONAR_BUILD}"
       - type: xlrelease.StringVariable
         key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      scriptUsername: gjhfk9f
-      scriptUserPassword: !value "xlrelease_Release_RAP_Build_and_Deploy_HOTFIX_scriptUserPassword"
+        value: "${SKIP_TEST_COVERAGE_BUILD}"
+      createdReleaseId: "${RAPDailyBuildReleaseId}"
       riskProfile: Default risk profile
-    - template: RSS Build and Deploy
-      scheduledStartDate: 2020-06-15T07:00:00Z
-      phases:
-      - phase: Build
-        tasks:
-        - name: RSS Build
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RSS Build
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: GitBranch
-            description: Git Branch for Build
-            value: ${GitBranch}
-          createdReleaseId: ${RSSBuildReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Global/Build/RSS Build
-          folder: ITMP Global/Build
-        - name: Wait for RSS Build
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RSSBuildReleaseId}
-        - name: Get Version from Build Release
-          type: xlrelease.ScriptTask
-          script: |-
-            releaseId = releaseVariables['RSSBuildReleaseId']
-            myVariables = releaseApi.getVariableValues(releaseId)
+      template: ITMP Global/Build/RAP Build
+      folder: ITMP Global/Build
+    - name: Wait for RAP Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['RAPDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
 
-            for key in myVariables:
-                if 'RSSBuildVersion' in key:
-                    releaseVariables['RSSVersion'] = myVariables[key]
-                    print(releaseVariables['RSSVersion'])
-        color: '#0079BC'
-      - phase: Deploy
-        tasks:
-        - name: RSS Deployment
-          type: xlrelease.CreateReleaseTask
-          newReleaseTitle: RSS Deployment
-          templateVariables:
-          - type: xlrelease.StringVariable
-            key: environmentSelect
-            value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
-          - type: xlrelease.StringVariable
-            key: version
-            value: ${RSSVersion}
-          createdReleaseId: ${RSSDeploymentReleaseId}
-          riskProfile: Default risk profile
-          template: ITMP Product/Deploy/Frontend/Deploy RSS Product
-          folder: ITMP Product/Deploy/Frontend
-        - name: Wait for RSS Deployment
-          type: xlrelease.GateTask
-          dependencies:
-          - type: xlrelease.Dependency
-            targetId: ${RSSDeploymentReleaseId}
-        color: '#0079BC'
-      tags:
-      - builds
-      - deployments
-      variables:
+        for key in myVariables:
+            if 'RAPBuildVersion' in key:
+                releaseVariables['RAPVersion'] = myVariables[key]
+                print(releaseVariables['RAPVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: RAP Daily Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Daily Deployment
+      templateVariables:
       - type: xlrelease.StringVariable
-        key: RSSVersion
-        showOnReleaseStart: false
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
-      - type: xlrelease.StringVariable
-        key: RSSBuildReleaseId
+        key: RAPVersion
         requiresValue: false
-        showOnReleaseStart: false
+        value: "${RAPVersion}"
       - type: xlrelease.StringVariable
-        key: RSSDeploymentReleaseId
+        key: environmentSelect
         requiresValue: false
-        showOnReleaseStart: false
-      scriptUsername: admin
-      scriptUserPassword: !value "xlrelease_Release_RSS_Build_and_Deploy_scriptUserPassword"
+        value: Configuration/environmentManagement/Environment8a6e9680b37243bfa9a5d61fa243c0fc
+      createdReleaseId: "${RAPDailyDeploymentReleaseId}"
       riskProfile: Default risk profile
-    - name: CISL DEV 530 AM IST
-      type: time.Schedule
-      description: 5:30 hr difference
-      releaseTitle: CISL DEV ${triggerTime}
-      variables:
+      folder: ITMP Global/Deploy
+    - name: Wait for RAP Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyDeploymentReleaseId}"
+    color: '#0079BC'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: RAPDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: Upgrade
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: SKIP_TEST_COVERAGE_BUILD
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: RAP Build and Deploy HOTFIX
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: RAP Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Build
+      templateVariables:
       - type: xlrelease.StringVariable
         key: GitBranch
-        value: master
+        description: Git Branch for Build
+        value: "${GitBranch}"
       - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      template: CISL Build and Deploy DEV
-      periodicity: 0 30 00 * * MON-FRI
-      triggerTime: 2022-02-01T00:30:00.190000
-    - name: CISL DEV 430PM IST
-      type: time.Schedule
-      releaseTitle: CISL DEV ${triggerTime}
-      variables:
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
-      - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
-      template: CISL Build and Deploy DEV
-      periodicity: 0 00 11 * * MON-FRI
-      enabled: false
-      triggerTime: 2020-11-20T11:00:00.567000
-    - name: RAP DEV 545 AM IST
-      type: time.Schedule
-      description: 5:30 hr difference
-      releaseTitle: RAP DEV ${triggerTime}
-      variables:
-      - type: xlrelease.StringVariable
-        key: GitBranch
-        value: master
-      - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
+        key: SKIP_SONAR_BUILD
+        value: "${SKIP_SONAR_BUILD}"
       - type: xlrelease.StringVariable
         key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      template: RAP Build and Deploy DEV
-      periodicity: 0 15 0 * * MON-FRI
-      triggerTime: 2022-02-01T00:15:00.193000
-    - name: RAP DEV 4PM IST
-      type: time.Schedule
-      releaseTitle: RAP DEV ${triggerTime}
-      variables:
+        value: "${SKIP_TEST_COVERAGE_BUILD}"
+      createdReleaseId: "${RAPDailyBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/RAP Build
+      folder: ITMP Global/Build
+    - name: Wait for RAP Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['RAPDailyBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'RAPBuildVersion' in key:
+                releaseVariables['RAPVersion'] = myVariables[key]
+                print(releaseVariables['RAPVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: RAP Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RAP Deployment
+      templateVariables:
+      - type: xlrelease.StringVariable
+        key: RAPVersion
+        requiresValue: false
+        value: "${RAPVersion}"
+      - type: xlrelease.StringVariable
+        key: environmentSelect
+        requiresValue: false
+        value: Configuration/environmentManagement/Environmentfd4cc5e9a41544d09848f880c6d5f844
+      createdReleaseId: "${RAPDailyDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      folder: ITMP Global/Deploy
+    - name: Wait for RAP Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RAPDailyDeploymentReleaseId}"
+    color: '#0079BC'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: RAPDailyBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RAPDailyDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+  - type: xlrelease.StringVariable
+    key: GIT_ABS_BRANCH
+  - type: xlrelease.StringVariable
+    key: SKIP_SONAR_BUILD
+    description: Skip Sonar Build ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "NO"
+      - "YES"
+    value: "NO"
+  - type: xlrelease.StringVariable
+    key: SKIP_TEST_COVERAGE_BUILD
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: gjhfk9f
+  riskProfile: Default risk profile
+- template: RSS Build and Deploy
+  scheduledStartDate: 2020-06-15T07:00:00Z
+  dueDate: 2020-06-15T08:00:00Z
+  phases:
+  - phase: Build
+    tasks:
+    - name: RSS Build
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RSS Build
+      templateVariables:
       - type: xlrelease.StringVariable
         key: GitBranch
-        value: master
+        description: Git Branch for Build
+        value: "${GitBranch}"
+      createdReleaseId: "${RSSBuildReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Global/Build/RSS Build
+      folder: ITMP Global/Build
+    - name: Wait for RSS Build
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RSSBuildReleaseId}"
+    - name: Get Version from Build Release
+      type: xlrelease.ScriptTask
+      script: |-
+        releaseId = releaseVariables['RSSBuildReleaseId']
+        myVariables = releaseApi.getVariableValues(releaseId)
+
+        for key in myVariables:
+            if 'RSSBuildVersion' in key:
+                releaseVariables['RSSVersion'] = myVariables[key]
+                print(releaseVariables['RSSVersion'])
+    color: '#0079BC'
+  - phase: Deploy
+    tasks:
+    - name: RSS Deployment
+      type: xlrelease.CreateReleaseTask
+      newReleaseTitle: RSS Deployment
+      templateVariables:
       - type: xlrelease.StringVariable
-        key: SONAR_BUILD
-        description: Skip Sonar Build ?
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "NO"
-          - "YES"
-        value: "NO"
+        key: environmentSelect
+        value: Configuration/environmentManagement/Environmente3a9cc7771684b2dbb5b09fe890d45a2
       - type: xlrelease.StringVariable
-        key: SKIP_TEST_COVERAGE_BUILD
-        valueProvider:
-          type: xlrelease.ListOfStringValueProviderConfiguration
-          values:
-          - "YES"
-          - "NO"
-      template: RAP Build and Deploy DEV
-      periodicity: 0 30 10  * * MON-FRI
-      enabled: false
-      triggerTime: 2020-11-23T10:30:05.846000
+        key: version
+        value: "${RSSVersion}"
+      createdReleaseId: "${RSSDeploymentReleaseId}"
+      riskProfile: Default risk profile
+      template: ITMP Product/Deploy/Frontend/Deploy RSS Product
+      folder: ITMP Product/Deploy/Frontend
+    - name: Wait for RSS Deployment
+      type: xlrelease.GateTask
+      dependencies:
+      - type: xlrelease.Dependency
+        targetId: "${RSSDeploymentReleaseId}"
+    color: '#0079BC'
+  tags:
+  - builds
+  - deployments
+  variables:
+  - type: xlrelease.StringVariable
+    key: RSSVersion
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: GitBranch
+    value: master
+  - type: xlrelease.StringVariable
+    key: RSSBuildReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: RSSDeploymentReleaseId
+    requiresValue: false
+    showOnReleaseStart: false
+  - type: xlrelease.StringVariable
+    key: DEPLOY_AFTER_BUILD
+    description: Do we want to immediately deploy succesfully builded image into stage
+      ?
+    valueProvider:
+      type: xlrelease.ListOfStringValueProviderConfiguration
+      values:
+      - "YES"
+      - "NO"
+    value: "YES"
+  scriptUsername: admin
+  riskProfile: Default risk profile
